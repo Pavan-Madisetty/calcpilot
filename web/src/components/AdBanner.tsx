@@ -3,6 +3,7 @@
 import React, { useEffect, useState } from 'react';
 import { getAds, logAdClick, logAdImpression, AdCampaign } from '../lib/store';
 import { ExternalLink } from 'lucide-react';
+import * as gtag from '../lib/gtag';
 
 interface AdBannerProps {
   placement: 'home_top' | 'calc_inline' | 'saved_bottom' | 'insights_sponsored';
@@ -36,6 +37,11 @@ export default function AdBanner({ placement, targetCalculator }: AdBannerProps)
 
   const handleClick = () => {
     logAdClick(ad.id);
+    gtag.event({
+      action: 'ad_click',
+      category: 'monetization',
+      label: `${ad.title} (${placement})`,
+    });
   };
 
   return (

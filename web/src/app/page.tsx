@@ -1,7 +1,8 @@
 'use client';
 
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import Dashboard from '../components/Dashboard';
+import * as gtag from '../lib/gtag';
 
 // Calculators
 import EmiCalculator from '../components/calculators/EmiCalculator';
@@ -26,6 +27,36 @@ export default function Home() {
   const [currentTab, setCurrentTab] = useState('home');
   const [searchQuery, setSearchQuery] = useState('');
   const [selectedCalc, setSelectedCalc] = useState<string>('emi');
+
+  // Track tab/calculator navigation via Google Analytics
+  useEffect(() => {
+    if (currentTab === 'home') {
+      gtag.pageview('/home');
+      gtag.event({
+        action: 'view_dashboard',
+        category: 'navigation',
+        label: 'Home Dashboard',
+      });
+    } else if (currentTab === 'calculators') {
+      const activeCalc = [
+        { id: 'emi', title: 'EMI Calculator' },
+        { id: 'sip', title: 'SIP Calculator' },
+        { id: 'loan_eligibility', title: 'Loan Eligibility' },
+        { id: 'tax', title: 'Salary Tax Calculator' },
+        { id: 'cc_rewards', title: 'Credit Card Rewards' },
+        { id: 'construction', title: 'Construction Cost' },
+        { id: 'tiles', title: 'Tile Calculator' }
+      ].find((c) => c.id === selectedCalc);
+      
+      const calcTitle = activeCalc ? activeCalc.title : selectedCalc;
+      gtag.pageview(`/calculators/${selectedCalc}`);
+      gtag.event({
+        action: 'select_calculator',
+        category: 'navigation',
+        label: calcTitle,
+      });
+    }
+  }, [currentTab, selectedCalc]);
 
   const calculatorsList = [
     { id: 'emi', title: 'EMI Calculator', icon: Percent },
