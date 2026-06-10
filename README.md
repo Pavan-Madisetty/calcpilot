@@ -24,12 +24,13 @@ calcpilot/
 ## 🛠️ Feature Matrix & Redesign
 
 * **End Customer Access**: End users do not need to log in to access the calculator suite.
-* **Layout Redesign**: The side menu has been replaced with a premium, responsive **Top Navigation Bar** on the main screens.
-* **Theme Styling**: Restricted to a clean, bright, and vibrant **Light Theme** (featuring Sky Blue and Indigo accents, clean white cards, and distinct borders). Dark mode has been removed for a professional finance appearance.
+* **Stateless Operations**: All calculator utilities run locally in the client-side state without tracking user logs, saving histories, or calculating user profiles.
+* **Layout Redesign**: The side menu has been replaced with a premium, responsive **Top Navigation Bar** on the main screens. The brand logo is text-only (`CalcPilot`) for a modern, clean typography look.
+* **Theme Styling**: Restricted to a clean, bright, and vibrant **Light Theme** (featuring Royal Indigo accents, Forest Emerald yields, clean white cards, and distinct borders).
 * **Admin Portal Authentication Gateway**: Access to the Admin Portal tab is password protected.
   * **Default Username**: `Pavan.madisetty`
   * **Default Password**: `Kony@1234`
-  * **Forgot & Reset Password**: Fully supported via Classic Classic/NPS styled recovery screens.
+  * **Forgot & Reset Password**: Fully supported via recovery screens.
 
 ### 1. Financial Calculators
 * **EMI Loan Calculator**: Adjust principal amount, interest rate, tenure, and processing fee. View monthly outgoings, total interest, and an interactive Pie Chart alongside a collapsible yearly amortization breakdown table.
