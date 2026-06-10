@@ -156,30 +156,30 @@ export default function SipCalculator() {
         {/* Right Side: Projections & Summary */}
         <div className="lg:col-span-6 bg-white border border-slate-200 p-6 rounded-2xl shadow-sm flex flex-col justify-between space-y-6">
           {/* Numbers */}
-          <div className="grid grid-cols-3 gap-2">
+          <div className="grid grid-cols-1 gap-3">
             <div className="bg-slate-50 p-3 rounded-xl border border-slate-100">
               <span className="text-[10px] uppercase font-bold text-slate-500 block tracking-wider">
-                Invested
+                Invested Amount
               </span>
-              <span className="text-xs font-bold block mt-1 text-slate-800">
+              <span className="text-sm font-bold block mt-1 text-slate-800">
                 {formatCurrency(result.totalInvestment)}
               </span>
             </div>
 
             <div className="bg-emerald-50 p-3 rounded-xl border border-emerald-100">
               <span className="text-[10px] uppercase font-bold text-emerald-600 block tracking-wider">
-                Est. Returns
+                Wealth Gained
               </span>
-              <span className="text-xs font-bold block mt-1 text-emerald-600">
+              <span className="text-sm font-bold block mt-1 text-emerald-600">
                 {formatCurrency(result.wealthGained)}
               </span>
             </div>
 
             <div className="bg-indigo-50 p-3 rounded-xl border border-indigo-100">
               <span className="text-[10px] uppercase font-bold text-indigo-600 block tracking-wider">
-                Future Value
+                Expected Future Value
               </span>
-              <span className="text-xs font-bold block mt-1 text-indigo-600">
+              <span className="text-sm font-bold block mt-1 text-indigo-600">
                 {formatCurrency(result.futureValue)}
               </span>
             </div>

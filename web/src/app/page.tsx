@@ -1,9 +1,7 @@
 'use client';
 
-import React, { useState, useEffect } from 'react';
+import React, { useState } from 'react';
 import Dashboard from '../components/Dashboard';
-import AdminPortal from '../components/AdminPortal';
-import AdminLogin from '../components/AdminLogin';
 
 // Calculators
 import EmiCalculator from '../components/calculators/EmiCalculator';
@@ -14,7 +12,6 @@ import CreditCardRewardsCalculator from '../components/calculators/CreditCardRew
 import ConstructionCostCalculator from '../components/calculators/ConstructionCostCalculator';
 import TileCalculator from '../components/calculators/TileCalculator';
 
-import { useTheme } from '../components/ThemeProvider';
 import {
   Percent,
   TrendingUp,
@@ -22,17 +19,13 @@ import {
   BookOpen,
   CreditCard,
   Construction,
-  Grid,
-  Lock,
-  LogOut,
-  UserCheck
+  Grid
 } from 'lucide-react';
 
 export default function Home() {
   const [currentTab, setCurrentTab] = useState('home');
   const [searchQuery, setSearchQuery] = useState('');
   const [selectedCalc, setSelectedCalc] = useState<string>('emi');
-  const [isAdminLoggedIn, setIsAdminLoggedIn] = useState(false);
   const [showNotifications, setShowNotifications] = useState(false);
 
   const notifications = [
@@ -50,24 +43,6 @@ export default function Home() {
     { id: 'tiles', title: 'Tile Calculator', icon: Grid }
   ];
 
-  useEffect(() => {
-    if (typeof window !== 'undefined') {
-      const loggedIn = localStorage.getItem('calcpilot-admin-auth') === 'true';
-      setIsAdminLoggedIn(loggedIn);
-    }
-  }, []);
-
-  const handleAdminSuccess = () => {
-    setIsAdminLoggedIn(true);
-    localStorage.setItem('calcpilot-admin-auth', 'true');
-  };
-
-  const handleSignOut = () => {
-    setIsAdminLoggedIn(false);
-    localStorage.removeItem('calcpilot-admin-auth');
-    setCurrentTab('home');
-  };
-
   const handleSelectCalculatorFromDashboard = (id: string) => {
     setSelectedCalc(id);
     setCurrentTab('calculators');
@@ -75,13 +50,6 @@ export default function Home() {
 
   // Render the active view
   const renderMainContent = () => {
-    if (currentTab === 'admin') {
-      if (!isAdminLoggedIn) {
-        return <AdminLogin onLoginSuccess={handleAdminSuccess} />;
-      }
-      return <AdminPortal />;
-    }
-
     switch (currentTab) {
       case 'home':
         return (
@@ -143,8 +111,8 @@ export default function Home() {
   return (
     <div className="min-h-screen flex flex-col bg-slate-50/50">
       {/* 1. PREMIUM TOP NAVIGATION BAR */}
-      <header className="sticky top-0 z-40 bg-white border-b border-slate-200 shadow-sm">
-        <div className="max-w-5xl mx-auto px-4 md:px-6 h-16 flex items-center justify-between gap-4">
+      <header className="sticky top-0 z-40 bg-white border-b border-slate-200 shadow-sm h-16 shrink-0">
+        <div className="max-w-5xl mx-auto px-4 md:px-6 h-full flex items-center justify-between gap-4">
           
           {/* Logo Brand without icon */}
           <div className="flex items-center cursor-pointer" onClick={() => setCurrentTab('home')}>
@@ -173,10 +141,10 @@ export default function Home() {
             })}
           </nav>
 
-          {/* Quick Actions & Admin Gate */}
+          {/* Quick Actions */}
           <div className="flex items-center gap-3">
             {/* Search Bar Input */}
-            <div className="relative hidden md:block w-40 lg:w-48">
+            <div className="relative w-40 lg:w-48">
               <span className="absolute inset-y-0 left-0 flex items-center pl-2.5 pointer-events-none text-xs">
                 🔍
               </span>
@@ -217,33 +185,6 @@ export default function Home() {
                 </>
               )}
             </div>
-
-            {/* Admin Profile Login Gate trigger */}
-            {isAdminLoggedIn ? (
-              <div className="flex items-center gap-2 pl-2 border-l border-slate-200">
-                <span className="hidden lg:flex items-center gap-1 text-[10px] font-bold text-indigo-600 bg-indigo-50 px-2 py-0.5 rounded-full uppercase">
-                  <UserCheck size={10} /> Admin Mode
-                </span>
-                <button
-                  onClick={handleSignOut}
-                  className="flex items-center gap-1.5 px-3 py-1.5 text-xs text-red-600 hover:bg-red-50 font-bold border border-red-200 rounded-lg transition cursor-pointer"
-                  title="Sign Out"
-                >
-                  <LogOut size={12} /> Sign Out
-                </button>
-              </div>
-            ) : (
-              <button
-                onClick={() => setCurrentTab('admin')}
-                className={`flex items-center gap-1.5 px-3 py-1.5 text-xs font-bold border rounded-lg transition cursor-pointer ${
-                  currentTab === 'admin'
-                    ? 'border-indigo-600 bg-indigo-50 text-indigo-600 font-extrabold'
-                    : 'border-slate-200 hover:bg-slate-50 text-slate-700'
-                }`}
-              >
-                <Lock size={12} /> Admin Access
-              </button>
-            )}
           </div>
         </div>
       </header>
@@ -273,16 +214,6 @@ export default function Home() {
             </button>
           );
         })}
-        {/* Mobile Admin tab */}
-        <button
-          onClick={() => setCurrentTab('admin')}
-          className={`flex flex-col items-center justify-center w-12 h-12 rounded-xl transition cursor-pointer ${
-            currentTab === 'admin' ? 'text-indigo-600 font-bold' : 'text-slate-500'
-          }`}
-        >
-          <span className="text-sm">⚙️</span>
-          <span className="text-[9px] font-semibold mt-0.5">Admin</span>
-        </button>
       </nav>
     </div>
   );

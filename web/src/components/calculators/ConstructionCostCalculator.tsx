@@ -161,10 +161,10 @@ export default function ConstructionCostCalculator() {
               </span>
             </div>
 
-            <div className="grid grid-cols-3 gap-3 text-center">
+            <div className="grid grid-cols-1 gap-3 text-center">
               <div className="bg-indigo-50 p-3 rounded-xl border border-indigo-100">
                 <span className="text-[9px] uppercase font-bold text-indigo-600 block">
-                  Materials (58%)
+                  Materials Budget (58%)
                 </span>
                 <span className="text-xs font-bold mt-1 block">
                   {formatCurrency(result.materialCost)}
@@ -172,7 +172,7 @@ export default function ConstructionCostCalculator() {
               </div>
               <div className="bg-emerald-50 p-3 rounded-xl border border-emerald-100">
                 <span className="text-[9px] uppercase font-bold text-emerald-600 block">
-                  Labor (25%)
+                  Labor Budget (25%)
                 </span>
                 <span className="text-xs font-bold mt-1 block">
                   {formatCurrency(result.laborCost)}
@@ -180,7 +180,7 @@ export default function ConstructionCostCalculator() {
               </div>
               <div className="bg-slate-50 p-3 rounded-xl border border-slate-200">
                 <span className="text-[9px] uppercase font-bold text-slate-500 block">
-                  Fittings (17%)
+                  Fittings &amp; Finish (17%)
                 </span>
                 <span className="text-xs font-bold mt-1 block">
                   {formatCurrency(result.fittingsCost)}

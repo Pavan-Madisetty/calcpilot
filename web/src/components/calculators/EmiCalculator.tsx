@@ -194,7 +194,7 @@ export default function EmiCalculator() {
         {/* Right Side: Charts & Summaries */}
         <div className="lg:col-span-5 bg-white border border-slate-200 p-6 rounded-2xl shadow-sm flex flex-col justify-between space-y-6">
           {/* Core Numbers */}
-          <div className="grid grid-cols-2 gap-4">
+          <div className="grid grid-cols-1 gap-3.5">
             <div className="bg-indigo-50 p-4 rounded-xl border border-indigo-100">
               <span className="text-[10px] uppercase font-bold text-indigo-600 block tracking-wider">
                 Monthly EMI

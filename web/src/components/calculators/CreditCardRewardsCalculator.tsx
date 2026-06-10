@@ -232,10 +232,10 @@ export default function CreditCardRewardsCalculator() {
             </div>
 
             {/* Main Value Metrics */}
-            <div className="grid grid-cols-2 gap-4">
+            <div className="grid grid-cols-1 gap-3.5">
               <div className="p-4 rounded-xl border border-slate-200 bg-slate-50/50">
                 <span className="text-[10px] uppercase font-bold text-slate-500 block tracking-wider">
-                  Reward Points
+                  Reward Points Earned
                 </span>
                 <span className="text-lg font-bold block mt-1 text-slate-800">
                   {result.rewardPointsEarned} RP
@@ -244,7 +244,7 @@ export default function CreditCardRewardsCalculator() {
 
               <div className="p-4 rounded-xl border border-emerald-100 bg-emerald-50">
                 <span className="text-[10px] uppercase font-bold text-emerald-600 block tracking-wider">
-                  Effective Return
+                  Effective Value Return
                 </span>
                 <span className="text-lg font-bold block mt-1 text-emerald-600">
                   {formatCurrency(result.effectiveReturnAmount)}
@@ -253,7 +253,7 @@ export default function CreditCardRewardsCalculator() {
 
               <div className="p-4 rounded-xl border border-indigo-100 bg-indigo-50">
                 <span className="text-[10px] uppercase font-bold text-indigo-600 block tracking-wider">
-                  Airline Miles
+                  Airline Partners Miles
                 </span>
                 <span className="text-sm font-bold block mt-1 text-indigo-600">
                   {result.airlineMiles.toLocaleString()} Miles
@@ -262,7 +262,7 @@ export default function CreditCardRewardsCalculator() {
 
               <div className="p-4 rounded-xl border border-indigo-100 bg-indigo-50">
                 <span className="text-[10px] uppercase font-bold text-indigo-600 block tracking-wider">
-                  Hotel Partners
+                  Hotel Partners Points
                 </span>
                 <span className="text-sm font-bold block mt-1 text-indigo-600">
                   {result.hotelPoints.toLocaleString()} Points

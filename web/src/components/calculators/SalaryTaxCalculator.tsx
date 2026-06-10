@@ -245,7 +245,7 @@ export default function SalaryTaxCalculator() {
                   </div>
 
                   {/* Regime Data Grid */}
-                  <div className="grid grid-cols-2 gap-4">
+                  <div className="grid grid-cols-1 gap-3.5">
                     {/* Old Regime Card */}
                     <div className={`p-4 rounded-xl border transition ${result.recommendedRegime === 'Old' ? 'border-indigo-500 bg-indigo-50/10' : 'border-slate-200'}`}>
                       <span className="text-[10px] uppercase font-bold text-slate-500 block tracking-wider">

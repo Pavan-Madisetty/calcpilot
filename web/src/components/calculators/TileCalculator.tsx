@@ -141,7 +141,7 @@ export default function TileCalculator() {
             </div>
 
             {/* Calculations Grid */}
-            <div className="grid grid-cols-2 gap-4">
+            <div className="grid grid-cols-1 gap-3.5">
               <div className="p-4 rounded-xl border border-slate-200 bg-slate-50/50">
                 <span className="text-[10px] uppercase font-bold text-slate-500 block tracking-wider">
                   Total Room Area
@@ -162,7 +162,7 @@ export default function TileCalculator() {
 
               <div className="p-4 rounded-xl border border-slate-200 bg-slate-50/50">
                 <span className="text-[10px] uppercase font-bold text-slate-500 block tracking-wider">
-                  Base Tiles Need
+                  Base Tiles Needed
                 </span>
                 <span className="text-sm font-bold block mt-1 text-slate-700">
                   {Math.ceil(result.baseTilesNeeded)} Tiles
@@ -171,10 +171,10 @@ export default function TileCalculator() {
 
               <div className="p-4 rounded-xl border border-amber-100 bg-amber-50">
                 <span className="text-[10px] uppercase font-bold text-amber-600 block tracking-wider">
-                  Wastage (Tiles)
+                  Wastage Buffer
                 </span>
                 <span className="text-sm font-bold block mt-1 text-amber-600">
-                  {Math.ceil(result.wastageTilesCount)} Tiles
+                  {Math.ceil(result.wastageTilesCount)} Tiles ({wastage}%)
                 </span>
               </div>
             </div>
