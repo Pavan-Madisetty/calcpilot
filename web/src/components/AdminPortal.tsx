@@ -3,7 +3,7 @@
 import React, { useState, useEffect } from 'react';
 import { getAds, saveAds, AdCampaign, getAnalytics } from '../lib/store';
 import { BarChart, Bar, XAxis, YAxis, ResponsiveContainer, Tooltip } from 'recharts';
-import { Settings, Image, Plus, Trash2, Megaphone, CheckCircle2, Sliders, LayoutDashboard } from 'lucide-react';
+import { Settings, Image, Plus, Trash2, CheckCircle2, Sliders, LayoutDashboard } from 'lucide-react';
 
 export default function AdminPortal() {
   const [ads, setAds] = useState<AdCampaign[]>([]);
@@ -24,10 +24,6 @@ export default function AdminPortal() {
   const [newAdPlacement, setNewAdPlacement] = useState<'home_top' | 'calc_inline' | 'saved_bottom' | 'insights_sponsored'>('home_top');
   const [newAdCalculator, setNewAdCalculator] = useState('emi');
   const [adSavedSuccess, setAdSavedSuccess] = useState(false);
-
-  // Notification center
-  const [notifText, setNotifText] = useState('');
-  const [notifSuccess, setNotifSuccess] = useState(false);
 
   useEffect(() => {
     setAds(getAds());
@@ -81,16 +77,6 @@ export default function AdminPortal() {
     setNewAdUrl('https://');
     setAdSavedSuccess(true);
     setTimeout(() => setAdSavedSuccess(false), 3000);
-  };
-
-  const handleTriggerNotification = (e: React.FormEvent) => {
-    e.preventDefault();
-    if (!notifText.trim()) return;
-
-    // Simulate sending push alert
-    setNotifSuccess(true);
-    setNotifText('');
-    setTimeout(() => setNotifSuccess(false), 3000);
   };
 
   const toggleCalculator = (key: string) => {
@@ -288,28 +274,6 @@ export default function AdminPortal() {
                 </div>
               ))}
             </div>
-          </div>
-
-          {/* Broadcast Alert */}
-          <div className="bg-card border border-border p-5 rounded-2xl shadow-sm space-y-4">
-            <h4 className="font-bold text-sm text-slate-800 dark:text-slate-200 flex items-center gap-1.5">
-              <Megaphone size={16} className="text-primary" /> Broadcast alert
-            </h4>
-            <form onSubmit={handleTriggerNotification} className="space-y-3">
-              <textarea
-                placeholder="Type push message (e.g. Budget 2026 tax slabs updated!)"
-                value={notifText}
-                onChange={(e) => setNotifText(e.target.value)}
-                className="w-full p-2.5 text-xs bg-input border border-border rounded-xl resize-none h-20"
-                required
-              />
-              <button
-                type="submit"
-                className="w-full py-2 text-xs bg-sky-600 hover:bg-sky-500 text-white font-bold rounded-xl transition cursor-pointer"
-              >
-                {notifSuccess ? 'Dispatched Alerts!' : 'Broadcast to Users'}
-              </button>
-            </form>
           </div>
         </div>
       </div>

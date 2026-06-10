@@ -26,12 +26,6 @@ export default function Home() {
   const [currentTab, setCurrentTab] = useState('home');
   const [searchQuery, setSearchQuery] = useState('');
   const [selectedCalc, setSelectedCalc] = useState<string>('emi');
-  const [showNotifications, setShowNotifications] = useState(false);
-
-  const notifications = [
-    { id: 1, text: 'HDFC Interest rates dropped to 8.35%!', time: '10m ago' },
-    { id: 2, text: 'Old vs New Tax Regime rules updated.', time: '2h ago' }
-  ];
 
   const calculatorsList = [
     { id: 'emi', title: 'EMI Calculator', icon: Percent },
@@ -155,35 +149,6 @@ export default function Home() {
                 onChange={(e) => setSearchQuery(e.target.value)}
                 className="w-full pl-8 pr-3 py-1.5 bg-slate-50 border border-slate-200 rounded-lg text-xs focus:outline-none focus:ring-1 focus:ring-indigo-500/30 transition-all"
               />
-            </div>
-
-            {/* Notifications */}
-            <div className="relative">
-              <button
-                onClick={() => setShowNotifications(!showNotifications)}
-                className="p-1.5 rounded-lg hover:bg-slate-100 text-slate-500 hover:text-slate-700 transition cursor-pointer"
-              >
-                🔔
-              </button>
-
-              {showNotifications && (
-                <>
-                  <div className="fixed inset-0 z-10" onClick={() => setShowNotifications(false)} />
-                  <div className="absolute right-0 mt-2 w-64 bg-white border border-slate-200 rounded-xl shadow-lg z-20 overflow-hidden">
-                    <div className="p-2.5 border-b border-slate-200 font-semibold text-[10px] text-slate-400 uppercase tracking-wider bg-slate-50">
-                      Notifications
-                    </div>
-                    <div className="divide-y divide-slate-100">
-                      {notifications.map((n) => (
-                        <div key={n.id} className="p-3 hover:bg-slate-50 transition text-xs">
-                          <p className="font-semibold text-slate-800">{n.text}</p>
-                          <span className="text-[9px] text-slate-400 block mt-1">{n.time}</span>
-                        </div>
-                      ))}
-                    </div>
-                  </div>
-                </>
-              )}
             </div>
           </div>
         </div>
