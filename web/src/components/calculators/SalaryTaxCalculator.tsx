@@ -62,6 +62,9 @@ export default function SalaryTaxCalculator() {
         </p>
       </div>
 
+      {/* Top Ad Place Holder */}
+      <AdBanner placement="calc_inline" targetCalculator="tax" />
+
       <div className="grid grid-cols-1 lg:grid-cols-12 gap-6">
         {/* Left Side: Inputs */}
         <div className="lg:col-span-6 bg-white border border-slate-200 p-6 rounded-2xl space-y-5 shadow-sm">
@@ -313,7 +316,8 @@ export default function SalaryTaxCalculator() {
         </div>
       </div>
 
-      <AdBanner placement="calc_inline" targetCalculator="tax" />
+      {/* Bottom Ad Place Holder */}
+      <AdBanner placement="insights_sponsored" targetCalculator="tax" />
     </div>
   );
 }

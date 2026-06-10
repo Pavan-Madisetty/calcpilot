@@ -94,40 +94,53 @@ export default function AdminPortal() {
         </p>
       </div>
 
-      {/* Metrics overview */}
-      <div className="grid grid-cols-1 md:grid-cols-4 gap-4">
-        <div className="p-4 bg-card border border-border rounded-2xl shadow-sm">
-          <span className="text-[10px] uppercase font-bold text-muted-foreground tracking-wider block">
-            Total Users
+      {/* Metrics Console Quicklinks */}
+      <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+        {/* Google Analytics Link */}
+        <a 
+          href="https://analytics.google.com/" 
+          target="_blank" 
+          rel="noopener noreferrer" 
+          className="p-6 bg-white border border-slate-200 rounded-2xl shadow-sm hover:border-indigo-400 transition-all duration-300 flex items-center justify-between group"
+        >
+          <div className="space-y-1">
+            <span className="text-[10px] uppercase font-extrabold text-indigo-600 tracking-wider">
+              Google Analytics Console
+            </span>
+            <h4 className="text-sm md:text-base font-bold text-slate-800 group-hover:text-indigo-600 transition">
+              Live Visitor &amp; Traffic Metrics
+            </h4>
+            <p className="text-xs text-slate-400">
+              Monitor real-time pageviews, active DAU, user flows, and conversion metrics securely.
+            </p>
+          </div>
+          <span className="text-2xl bg-indigo-50 group-hover:bg-indigo-600 group-hover:text-white text-indigo-600 h-10 w-10 rounded-xl flex items-center justify-center transition-all duration-300">
+            📈
           </span>
-          <span className="text-2xl font-extrabold text-slate-800 dark:text-white block mt-1">
-            2,482
+        </a>
+
+        {/* Google AdSense Link */}
+        <a 
+          href="https://adsense.google.com/" 
+          target="_blank" 
+          rel="noopener noreferrer" 
+          className="p-6 bg-white border border-slate-200 rounded-2xl shadow-sm hover:border-sky-400 transition-all duration-300 flex items-center justify-between group"
+        >
+          <div className="space-y-1">
+            <span className="text-[10px] uppercase font-extrabold text-sky-600 tracking-wider">
+              Google AdSense Console
+            </span>
+            <h4 className="text-sm md:text-base font-bold text-slate-800 group-hover:text-sky-600 transition">
+              Live Ad Revenue &amp; CTR Earnings
+            </h4>
+            <p className="text-xs text-slate-400">
+              Track actual impressions, ad clicks, payouts, and configure auto-ad settings.
+            </p>
+          </div>
+          <span className="text-2xl bg-sky-50 group-hover:bg-sky-600 group-hover:text-white text-sky-600 h-10 w-10 rounded-xl flex items-center justify-center transition-all duration-300">
+            💰
           </span>
-        </div>
-        <div className="p-4 bg-card border border-border rounded-2xl shadow-sm">
-          <span className="text-[10px] uppercase font-bold text-muted-foreground tracking-wider block">
-            Daily Active (DAU)
-          </span>
-          <span className="text-2xl font-extrabold text-sky-600 dark:text-sky-400 block mt-1">
-            612
-          </span>
-        </div>
-        <div className="p-4 bg-card border border-border rounded-2xl shadow-sm">
-          <span className="text-[10px] uppercase font-bold text-muted-foreground tracking-wider block">
-            Est. Ad Revenue
-          </span>
-          <span className="text-2xl font-extrabold text-emerald-600 dark:text-emerald-400 block mt-1">
-            ₹12,450
-          </span>
-        </div>
-        <div className="p-4 bg-card border border-border rounded-2xl shadow-sm">
-          <span className="text-[10px] uppercase font-bold text-muted-foreground tracking-wider block">
-            Average Ad CTR
-          </span>
-          <span className="text-2xl font-extrabold text-indigo-600 dark:text-indigo-400 block mt-1">
-            3.2%
-          </span>
-        </div>
+        </a>
       </div>
 
       <div className="grid grid-cols-1 lg:grid-cols-12 gap-6">

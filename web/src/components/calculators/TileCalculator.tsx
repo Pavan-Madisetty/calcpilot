@@ -48,6 +48,9 @@ export default function TileCalculator() {
         </p>
       </div>
 
+      {/* Top Ad Place Holder */}
+      <AdBanner placement="calc_inline" targetCalculator="tiles" />
+
       <div className="grid grid-cols-1 lg:grid-cols-12 gap-6">
         {/* Left Inputs */}
         <div className="lg:col-span-7 bg-white border border-slate-200 p-6 rounded-2xl space-y-6 shadow-sm">
@@ -202,7 +205,8 @@ export default function TileCalculator() {
         </div>
       </div>
 
-      <AdBanner placement="calc_inline" targetCalculator="tiles" />
+      {/* Bottom Ad Place Holder */}
+      <AdBanner placement="insights_sponsored" targetCalculator="tiles" />
     </div>
   );
 }

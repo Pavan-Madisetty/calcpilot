@@ -138,6 +138,9 @@ export default function Dashboard({ onSelectCalculator, searchQuery }: Dashboard
           )}
         </div>
       </div>
+
+      {/* Bottom Ad Banner Slot */}
+      <AdBanner placement="saved_bottom" />
     </div>
   );
 }

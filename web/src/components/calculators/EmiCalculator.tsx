@@ -53,6 +53,9 @@ export default function EmiCalculator() {
         </p>
       </div>
 
+      {/* Top Ad Place Holder */}
+      <AdBanner placement="calc_inline" targetCalculator="emi" />
+
       <div className="grid grid-cols-1 lg:grid-cols-12 gap-6">
         {/* Left Side: Inputs */}
         <div className="lg:col-span-7 bg-white border border-slate-200 p-6 rounded-2xl space-y-6 shadow-sm">
@@ -262,7 +265,7 @@ export default function EmiCalculator() {
       </div>
 
       {/* Ad placement */}
-      <AdBanner placement="calc_inline" targetCalculator="emi" />
+      <AdBanner placement="insights_sponsored" targetCalculator="emi" />
 
       {/* Amortization Schedule */}
       <div className="bg-white border border-slate-200 rounded-2xl overflow-hidden shadow-sm">

@@ -75,6 +75,9 @@ export default function CreditCardRewardsCalculator() {
         </p>
       </div>
 
+      {/* Top Ad Place Holder */}
+      <AdBanner placement="calc_inline" targetCalculator="cc_rewards" />
+
       <div className="grid grid-cols-1 lg:grid-cols-12 gap-6">
         {/* Left Inputs */}
         <div className="lg:col-span-7 bg-white border border-slate-200 p-6 rounded-2xl space-y-6 shadow-sm">

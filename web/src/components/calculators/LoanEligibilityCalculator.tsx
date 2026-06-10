@@ -62,6 +62,9 @@ export default function LoanEligibilityCalculator() {
         </p>
       </div>
 
+      {/* Top Ad Place Holder */}
+      <AdBanner placement="calc_inline" targetCalculator="loan_eligibility" />
+
       <div className="grid grid-cols-1 lg:grid-cols-12 gap-6">
         {/* Inputs */}
         <div className="lg:col-span-6 bg-white border border-slate-200 p-6 rounded-2xl space-y-6 shadow-sm">
@@ -293,7 +296,8 @@ export default function LoanEligibilityCalculator() {
         </div>
       </div>
 
-      <AdBanner placement="calc_inline" targetCalculator="loan_eligibility" />
+      {/* Bottom Ad Place Holder */}
+      <AdBanner placement="insights_sponsored" targetCalculator="loan_eligibility" />
     </div>
   );
 }
