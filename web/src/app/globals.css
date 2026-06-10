@@ -22,38 +22,38 @@
 }
 
 :root {
-  --background: #f8fafc;
-  --foreground: #0f172a;
+  --background: #fcfcfd; /* Ultra clean off-white */
+  --foreground: #0f172a; /* Slate 900 */
   
   --card: #ffffff;
   --card-foreground: #0f172a;
   
-  --primary: #0284c7;
+  --primary: #4f46e5; /* Royal Indigo */
   --primary-foreground: #ffffff;
   
   --secondary: #f1f5f9;
   --secondary-foreground: #0f172a;
   
   --muted: #f8fafc;
-  --muted-foreground: #64748b;
+  --muted-foreground: #475569;
   
-  --accent: #f0f9ff;
-  --accent-foreground: #0369a1;
+  --accent: #f5f3ff; /* Indigo 50 */
+  --accent-foreground: #4f46e5;
   
-  --border: #e2e8f0;
+  --border: #e2e8f0; /* Slate 200 */
   --input: #ffffff;
-  --ring: #0284c7;
+  --ring: #4f46e5;
   
   --radius: 0.75rem;
   
-  --chart-1: #0ea5e9;
-  --chart-2: #10b981;
+  --chart-1: #4f46e5; /* Royal Indigo */
+  --chart-2: #10b981; /* Forest Emerald */
   --chart-3: #f59e0b;
   --chart-4: #8b5cf6;
   --chart-5: #ec4899;
 }
 
-/* Base Styles */
+/* Base Body Styles */
 body {
   background-color: var(--background);
   color: var(--foreground);
@@ -67,14 +67,6 @@ body {
   border: 1px solid #e2e8f0;
   box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.05), 0 2px 4px -2px rgba(0, 0, 0, 0.05);
   border-radius: 1rem;
-}
-
-/* Glassmorphism effects */
-.glass {
-  background: rgba(255, 255, 255, 0.8);
-  backdrop-filter: blur(12px);
-  -webkit-backdrop-filter: blur(12px);
-  border: 1px solid rgba(226, 232, 240, 0.8);
 }
 
 /* Custom scrollbars */
@@ -96,32 +88,24 @@ body {
   background: #94a3b8;
 }
 
-/* Glow decoration background */
-@keyframes pulseGlow {
-  0%, 100% {
-    opacity: 0.1;
-    transform: scale(1);
-  }
-  50% {
-    opacity: 0.18;
-    transform: scale(1.05);
-  }
+/* Input elements styling */
+input[type="range"] {
+  height: 6px;
+  border-radius: 9999px;
+  background: #e2e8f0;
+  accent-color: var(--primary);
 }
 
-.glow-bg {
-  position: relative;
+select, input[type="number"], input[type="text"] {
+  border: 1px solid #cbd5e1;
+  border-radius: 0.75rem;
+  background-color: #ffffff;
+  color: #0f172a;
+  transition: all 0.2s ease;
 }
 
-.glow-bg::before {
-  content: '';
-  position: absolute;
-  top: -20%;
-  left: -20%;
-  right: -20%;
-  bottom: -20%;
-  background: radial-gradient(circle, var(--primary) 0%, transparent 60%);
-  z-index: -1;
-  filter: blur(40px);
-  animation: pulseGlow 8s infinite ease-in-out;
-  pointer-events: none;
+select:focus, input[type="number"]:focus, input[type="text"]:focus {
+  border-color: var(--primary);
+  box-shadow: 0 0 0 2px rgba(79, 70, 229, 0.15);
+  outline: none;
 }

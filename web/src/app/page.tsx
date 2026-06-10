@@ -2,9 +2,6 @@
 
 import React, { useState, useEffect } from 'react';
 import Dashboard from '../components/Dashboard';
-import SavedCalculations from '../components/SavedCalculations';
-import Insights from '../components/Insights';
-import ProfileSettings from '../components/ProfileSettings';
 import AdminPortal from '../components/AdminPortal';
 import AdminLogin from '../components/AdminLogin';
 
@@ -26,8 +23,6 @@ import {
   CreditCard,
   Construction,
   Grid,
-  Search,
-  Bell,
   Lock,
   LogOut,
   UserCheck
@@ -56,7 +51,6 @@ export default function Home() {
   ];
 
   useEffect(() => {
-    // Check if session exists in browser cache
     if (typeof window !== 'undefined') {
       const loggedIn = localStorage.getItem('calcpilot-admin-auth') === 'true';
       setIsAdminLoggedIn(loggedIn);
@@ -113,7 +107,7 @@ export default function Home() {
                     onClick={() => setSelectedCalc(c.id)}
                     className={`flex items-center w-full px-3 py-2.5 rounded-xl text-left text-xs font-semibold transition cursor-pointer ${
                       isActive
-                        ? 'bg-sky-50 text-sky-600 font-bold'
+                        ? 'bg-indigo-50 text-indigo-600 font-bold'
                         : 'text-slate-600 hover:bg-slate-50'
                     }`}
                   >
@@ -136,10 +130,6 @@ export default function Home() {
             </div>
           </div>
         );
-      case 'saved':
-        return <SavedCalculations />;
-      case 'insights':
-        return <Insights />;
       default:
         return <Dashboard onSelectCalculator={handleSelectCalculatorFromDashboard} searchQuery={searchQuery} />;
     }
@@ -147,22 +137,18 @@ export default function Home() {
 
   const navItems = [
     { id: 'home', label: 'Home' },
-    { id: 'calculators', label: 'Calculators' },
-    { id: 'saved', label: 'Saved' },
-    { id: 'insights', label: 'Insights' }
+    { id: 'calculators', label: 'Calculators' }
   ];
 
   return (
     <div className="min-h-screen flex flex-col bg-slate-50/50">
       {/* 1. PREMIUM TOP NAVIGATION BAR */}
-      <header className="sticky top-0 z-40 bg-white/95 backdrop-blur-md border-b border-slate-200/80 shadow-sm">
-        <div className="max-w-6xl mx-auto px-4 md:px-6 h-16 flex items-center justify-between gap-4">
-          {/* Logo Brand */}
-          <div className="flex items-center gap-2 cursor-pointer" onClick={() => setCurrentTab('home')}>
-            <div className="flex h-9 w-9 items-center justify-center rounded-xl bg-gradient-to-tr from-sky-500 to-indigo-600 text-white shadow-md shadow-sky-500/20">
-              <span className="text-lg font-bold">🧭</span>
-            </div>
-            <span className="font-extrabold text-base font-display bg-gradient-to-r from-sky-600 to-indigo-600 bg-clip-text text-transparent">
+      <header className="sticky top-0 z-40 bg-white border-b border-slate-200 shadow-sm">
+        <div className="max-w-5xl mx-auto px-4 md:px-6 h-16 flex items-center justify-between gap-4">
+          
+          {/* Logo Brand without icon */}
+          <div className="flex items-center cursor-pointer" onClick={() => setCurrentTab('home')}>
+            <span className="font-extrabold text-xl font-display text-indigo-600 tracking-tight">
               CalcPilot
             </span>
           </div>
@@ -177,7 +163,7 @@ export default function Home() {
                   onClick={() => setCurrentTab(item.id)}
                   className={`px-4 py-2 rounded-xl text-xs font-bold transition cursor-pointer ${
                     isActive
-                      ? 'bg-sky-50 text-sky-600 font-extrabold'
+                      ? 'bg-indigo-50 text-indigo-600 font-extrabold'
                       : 'text-slate-600 hover:bg-slate-50'
                   }`}
                 >
@@ -199,7 +185,7 @@ export default function Home() {
                 placeholder="Search calculator..."
                 value={searchQuery}
                 onChange={(e) => setSearchQuery(e.target.value)}
-                className="w-full pl-8 pr-3 py-1 bg-slate-50 border border-slate-200 rounded-lg text-xs focus:outline-none focus:ring-1 focus:ring-sky-500/30 transition-all"
+                className="w-full pl-8 pr-3 py-1.5 bg-slate-50 border border-slate-200 rounded-lg text-xs focus:outline-none focus:ring-1 focus:ring-indigo-500/30 transition-all"
               />
             </div>
 
@@ -251,7 +237,7 @@ export default function Home() {
                 onClick={() => setCurrentTab('admin')}
                 className={`flex items-center gap-1.5 px-3 py-1.5 text-xs font-bold border rounded-lg transition cursor-pointer ${
                   currentTab === 'admin'
-                    ? 'border-indigo-600 bg-indigo-50 text-indigo-600'
+                    ? 'border-indigo-600 bg-indigo-50 text-indigo-600 font-extrabold'
                     : 'border-slate-200 hover:bg-slate-50 text-slate-700'
                 }`}
               >
@@ -263,7 +249,7 @@ export default function Home() {
       </header>
 
       {/* Main content body */}
-      <main className="flex-1 max-w-6xl w-full mx-auto p-4 md:p-6 pb-20">
+      <main className="flex-1 max-w-5xl w-full mx-auto p-4 md:p-6 pb-20">
         {renderMainContent()}
       </main>
 
@@ -276,14 +262,12 @@ export default function Home() {
               key={item.id}
               onClick={() => setCurrentTab(item.id)}
               className={`flex flex-col items-center justify-center w-12 h-12 rounded-xl transition cursor-pointer ${
-                isActive ? 'text-sky-600 font-bold' : 'text-slate-500'
+                isActive ? 'text-indigo-600 font-bold' : 'text-slate-500'
               }`}
             >
               <span className="text-sm font-semibold">
                 {item.id === 'home' && '🏠'}
                 {item.id === 'calculators' && '🧮'}
-                {item.id === 'saved' && '🔖'}
-                {item.id === 'insights' && '📈'}
               </span>
               <span className="text-[9px] font-semibold mt-0.5">{item.label}</span>
             </button>
