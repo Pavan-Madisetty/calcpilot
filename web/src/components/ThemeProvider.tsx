@@ -2,69 +2,32 @@
 
 import React, { createContext, useContext, useEffect, useState } from 'react';
 
-type Theme = 'light' | 'dark' | 'system';
+type Theme = 'light';
 
 interface ThemeContextType {
   theme: Theme;
   setTheme: (theme: Theme) => void;
-  resolvedTheme: 'light' | 'dark';
+  resolvedTheme: 'light';
 }
 
 const ThemeContext = createContext<ThemeContextType | undefined>(undefined);
 
 export function ThemeProvider({ children }: { children: React.ReactNode }) {
-  const [theme, setThemeState] = useState<Theme>('system');
-  const [resolvedTheme, setResolvedTheme] = useState<'light' | 'dark'>('light');
   const [mounted, setMounted] = useState(false);
 
   useEffect(() => {
-    const savedTheme = localStorage.getItem('calcpilot-theme') as Theme;
-    if (savedTheme) {
-      setThemeState(savedTheme);
-    }
+    // Force root element to remove dark class always
+    const root = window.document.documentElement;
+    root.classList.remove('dark');
     setMounted(true);
   }, []);
 
-  const setTheme = (newTheme: Theme) => {
-    setThemeState(newTheme);
-    localStorage.setItem('calcpilot-theme', newTheme);
+  const setTheme = () => {
+    // No-op to support existing calls without crash
   };
 
-  useEffect(() => {
-    if (!mounted) return;
-
-    const root = window.document.documentElement;
-    const mediaQuery = window.matchMedia('(prefers-color-scheme: dark)');
-
-    const applyTheme = () => {
-      let activeTheme: 'light' | 'dark' = 'light';
-
-      if (theme === 'system') {
-        activeTheme = mediaQuery.matches ? 'dark' : 'light';
-      } else {
-        activeTheme = theme;
-      }
-
-      setResolvedTheme(activeTheme);
-
-      if (activeTheme === 'dark') {
-        root.classList.add('dark');
-      } else {
-        root.classList.remove('dark');
-      }
-    };
-
-    applyTheme();
-
-    if (theme === 'system') {
-      const listener = () => applyTheme();
-      mediaQuery.addEventListener('change', listener);
-      return () => mediaQuery.removeEventListener('change', listener);
-    }
-  }, [theme, mounted]);
-
   return (
-    <ThemeContext.Provider value={{ theme, setTheme, resolvedTheme }}>
+    <ThemeContext.Provider value={{ theme: 'light', setTheme, resolvedTheme: 'light' }}>
       <div style={!mounted ? { visibility: 'hidden' } : undefined}>
         {children}
       </div>
