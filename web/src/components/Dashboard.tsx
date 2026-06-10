@@ -1,6 +1,7 @@
 'use client';
 
 import React from 'react';
+import Link from 'next/link';
 import {
   TrendingUp,
   Percent,
@@ -104,9 +105,15 @@ export default function Dashboard({ onSelectCalculator, searchQuery }: Dashboard
           {filteredCalcs.map((calc) => {
             const Icon = calc.icon;
             return (
-              <button
+              <Link
                 key={calc.id}
-                onClick={() => onSelectCalculator(calc.id)}
+                href={
+                  calc.id === 'loan_eligibility'
+                    ? '/calculators/loan-eligibility'
+                    : calc.id === 'cc_rewards'
+                    ? '/calculators/cc-rewards'
+                    : `/calculators/${calc.id}`
+                }
                 className="group flex flex-col justify-between text-left p-6 rounded-2xl bg-white border border-slate-200 hover:border-indigo-400 shadow-sm transition-all duration-300 hover:shadow-md transform hover:scale-[1.01] cursor-pointer"
               >
                 <div className="space-y-4">
@@ -128,7 +135,7 @@ export default function Dashboard({ onSelectCalculator, searchQuery }: Dashboard
                 <div className="flex items-center gap-1.5 text-xs text-indigo-600 font-bold mt-5 opacity-0 group-hover:opacity-100 transition duration-300">
                   Calculate Now <ArrowRight size={12} />
                 </div>
-              </button>
+              </Link>
             );
           })}
           {filteredCalcs.length === 0 && (
