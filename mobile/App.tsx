@@ -1,116 +1,630 @@
-import React, { useState } from 'react';
-import { StyleSheet, Text, View, ScrollView, TouchableOpacity, SafeAreaView, Dimensions, StatusBar } from 'react-native';
+import React, { useState, useEffect } from 'react';
+import { 
+  StyleSheet, 
+  Text, 
+  View, 
+  ScrollView, 
+  TouchableOpacity, 
+  SafeAreaView, 
+  TextInput,
+  StatusBar,
+  KeyboardAvoidingView,
+  Platform
+} from 'react-native';
 
-type ScreenTab = 'Home' | 'Calculators' | 'Saved' | 'Insights' | 'Profile';
+type ScreenTab = 'Home' | 'Calculators';
 
 export default function App() {
   const [activeTab, setActiveTab] = useState<ScreenTab>('Home');
-  const [selectedCalculator, setSelectedCalculator] = useState<string>('EMI');
+  const [selectedCalc, setSelectedCalc] = useState<string>('emi');
 
-  const calculatorsList = ['EMI', 'SIP', 'Loan Eligibility', 'Salary Tax', 'Rewards', 'Construction', 'Tiles'];
+  // Calculator List
+  const calculatorsList = [
+    { id: 'emi', title: 'EMI Calculator', category: 'Finance', icon: '⚡' },
+    { id: 'sip', title: 'SIP Calculator', category: 'Finance', icon: '📈' },
+    { id: 'loan_eligibility', title: 'Loan Eligibility', category: 'Finance', icon: ' Compass' },
+    { id: 'tax', title: 'Salary Tax Calculator', category: 'Finance', icon: '💼' },
+    { id: 'construction', title: 'Construction Cost', category: 'Construction', icon: '🏗️' },
+    { id: 'tiles', title: 'Tile Calculator', category: 'Construction', icon: '🧱' }
+  ];
 
-  // Safe Area Screen Wrapper
+  // Helper: Format Currency (INR)
+  const formatCurrency = (val: number) => {
+    return '₹' + Math.round(val).toLocaleString('en-IN');
+  };
+
+  // --- STATE FOR INTERACTIVE CALCULATORS ---
+  // EMI
+  const [emiLoan, setEmiLoan] = useState('2500000');
+  const [emiRate, setEmiRate] = useState('8.5');
+  const [emiTenure, setEmiTenure] = useState('20');
+  const [emiResult, setEmiResult] = useState({ emi: 0, interest: 0, total: 0 });
+
+  // SIP
+  const [sipMonthly, setSipMonthly] = useState('10000');
+  const [sipRate, setSipRate] = useState('12');
+  const [sipTenure, setSipTenure] = useState('15');
+  const [sipResult, setSipResult] = useState({ invested: 0, wealth: 0, total: 0 });
+
+  // Loan Eligibility
+  const [income, setIncome] = useState('80000');
+  const [existingEmi, setExistingEmi] = useState('15000');
+  const [elRate, setElRate] = useState('8.5');
+  const [elTenure, setElTenure] = useState('20');
+  const [elResult, setElResult] = useState({ maxEmi: 0, maxLoan: 0 });
+
+  // Tax Slabs (FY 2025-26)
+  const [grossSalary, setGrossSalary] = useState('1200000');
+  const [taxResult, setTaxResult] = useState({ oldTax: 0, newTax: 0 });
+
+  // Construction
+  const [area, setArea] = useState('1500');
+  const [floors, setFloors] = useState('2');
+  const [grade, setGrade] = useState<'Standard' | 'Premium' | 'Luxury'>('Premium');
+  const [constResult, setConstResult] = useState({ total: 0, materials: 0, labor: 0 });
+
+  // Tiles
+  const [length, setLength] = useState('12');
+  const [width, setWidth] = useState('10');
+  const [tileSize, setTileSize] = useState('2'); // in feet
+  const [wastage, setWastage] = useState('10');
+  const [tilesResult, setTilesResult] = useState({ baseCount: 0, totalCount: 0 });
+
+  // --- CALCULATOR IMPLEMENTATIONS ---
+  useEffect(() => {
+    // EMI Calculation
+    const P = parseFloat(emiLoan) || 0;
+    const r = (parseFloat(emiRate) || 0) / 12 / 100;
+    const n = (parseFloat(emiTenure) || 0) * 12;
+
+    if (P > 0 && r > 0 && n > 0) {
+      const emi = (P * r * Math.pow(1 + r, n)) / (Math.pow(1 + r, n) - 1);
+      const total = emi * n;
+      const interest = total - P;
+      setEmiResult({ emi, interest, total });
+    } else {
+      setEmiResult({ emi: 0, interest: 0, total: 0 });
+    }
+  }, [emiLoan, emiRate, emiTenure]);
+
+  useEffect(() => {
+    // SIP Calculation
+    const P = parseFloat(sipMonthly) || 0;
+    const i = (parseFloat(sipRate) || 0) / 12 / 100;
+    const n = (parseFloat(sipTenure) || 0) * 12;
+
+    if (P > 0 && i > 0 && n > 0) {
+      const total = P * ((Math.pow(1 + i, n) - 1) / i) * (1 + i);
+      const invested = P * n;
+      const wealth = total - invested;
+      setSipResult({ invested, wealth, total });
+    } else {
+      setSipResult({ invested: 0, wealth: 0, total: 0 });
+    }
+  }, [sipMonthly, sipRate, sipTenure]);
+
+  useEffect(() => {
+    // Loan Eligibility
+    const inc = parseFloat(income) || 0;
+    const exist = parseFloat(existingEmi) || 0;
+    const R = (parseFloat(elRate) || 0) / 12 / 100;
+    const N = (parseFloat(elTenure) || 0) * 12;
+
+    const maxEmi = Math.max(0, (inc * 0.5) - exist); // 50% FOIR cap
+    if (maxEmi > 0 && R > 0 && N > 0) {
+      const maxLoan = maxEmi * ((Math.pow(1 + R, N) - 1) / (R * Math.pow(1 + R, N)));
+      setElResult({ maxEmi, maxLoan });
+    } else {
+      setElResult({ maxEmi: 0, maxLoan: 0 });
+    }
+  }, [income, existingEmi, elRate, elTenure]);
+
+  useEffect(() => {
+    // Simplified Indian Tax slabs (FY 2025-26)
+    const sal = parseFloat(grossSalary) || 0;
+    
+    // New Regime
+    let newTax = 0;
+    const netNew = Math.max(0, sal - 75000); // 75k Standard Deduction
+    if (netNew > 1275000) { // Tax free up to 12.75L in New Regime
+      if (netNew <= 400000) newTax = 0;
+      else if (netNew <= 800000) newTax = (netNew - 40000) * 0.05;
+      else if (netNew <= 1200000) newTax = 20000 + (netNew - 800000) * 0.10;
+      else if (netNew <= 1600000) newTax = 60000 + (netNew - 1200000) * 0.15;
+      else if (netNew <= 2400000) newTax = 120000 + (netNew - 1600000) * 0.20;
+      else newTax = 280000 + (netNew - 2400000) * 0.30;
+      newTax += newTax * 0.04; // Cess
+    }
+
+    // Old Regime (Mocking standard deductions of 1.5L + 50k Standard Deduction)
+    let oldTax = 0;
+    const netOld = Math.max(0, sal - 200000);
+    if (netOld > 500000) {
+      if (netOld <= 250000) oldTax = 0;
+      else if (netOld <= 500000) oldTax = (netOld - 250000) * 0.05;
+      else if (netOld <= 1000000) oldTax = 12500 + (netOld - 500000) * 0.20;
+      else oldTax = 112500 + (netOld - 1000000) * 0.30;
+      oldTax += oldTax * 0.04; // Cess
+    }
+
+    setTaxResult({ oldTax, newTax });
+  }, [grossSalary]);
+
+  useEffect(() => {
+    // Construction Cost
+    const ar = parseFloat(area) || 0;
+    const fl = parseFloat(floors) || 0;
+    const totalArea = ar * fl;
+    let rate = 1850; // Premium default
+
+    if (grade === 'Standard') rate = 1500;
+    else if (grade === 'Luxury') rate = 2300;
+
+    const total = totalArea * rate;
+    setConstResult({
+      total,
+      materials: total * 0.58,
+      labor: total * 0.25
+    });
+  }, [area, floors, grade]);
+
+  useEffect(() => {
+    // Tiles Calculator
+    const l = parseFloat(length) || 0;
+    const w = parseFloat(width) || 0;
+    const ts = parseFloat(tileSize) || 2;
+    const wast = parseFloat(wastage) || 0;
+
+    const roomArea = l * w;
+    const tileArea = ts * ts;
+
+    if (roomArea > 0 && tileArea > 0) {
+      const base = roomArea / tileArea;
+      const total = base * (1 + wast / 100);
+      setTilesResult({
+        baseCount: base,
+        totalCount: total
+      });
+    } else {
+      setTilesResult({ baseCount: 0, totalCount: 0 });
+    }
+  }, [length, width, tileSize, wastage]);
+
+  // Handle calculator selection from Home Dashboard
+  const handleSelectCalculator = (id: string) => {
+    setSelectedCalc(id);
+    setActiveTab('Calculators');
+  };
+
   return (
     <SafeAreaView style={styles.container}>
-      <StatusBar barStyle="light-content" backgroundColor="#030712" />
+      <StatusBar barStyle="dark-content" backgroundColor="#ffffff" />
       
-      {/* Header bar */}
+      {/* 1. PREMIUM HEADER BRAND */}
       <View style={styles.header}>
-        <Text style={styles.headerTitle}>🧭 CalcPilot</Text>
-        <Text style={styles.headerSubtitle}>{activeTab}</Text>
+        <Text style={styles.headerBrand}>CalcPilot</Text>
+        <Text style={styles.headerIndicator}>{activeTab}</Text>
       </View>
 
-      {/* Screen Body */}
-      <ScrollView contentContainerStyle={styles.body}>
-        {activeTab === 'Home' && (
-          <View style={styles.card}>
-            <Text style={styles.cardTitle}>Featured Calculators</Text>
-            <Text style={styles.cardText}>Select a tool below or use the bottom navigation.</Text>
-            
-            <View style={styles.grid}>
-              {calculatorsList.slice(0, 4).map((calc) => (
-                <TouchableOpacity
-                  key={calc}
-                  style={styles.gridBtn}
-                  onPress={() => {
-                    setSelectedCalculator(calc);
-                    setActiveTab('Calculators');
-                  }}
-                >
-                  <Text style={styles.btnEmoji}>📊</Text>
-                  <Text style={styles.btnLabel}>{calc}</Text>
-                </TouchableOpacity>
-              ))}
-            </View>
-          </View>
-        )}
+      <KeyboardAvoidingView
+        behavior={Platform.OS === 'ios' ? 'padding' : 'height'}
+        style={{ flex: 1 }}
+      >
+        <ScrollView contentContainerStyle={styles.scrollBody} keyboardShouldPersistTaps="handled">
+          
+          {/* --- HOME TAB PANEL --- */}
+          {activeTab === 'Home' && (
+            <View style={styles.homeContainer}>
+              <View style={styles.welcomeCard}>
+                <Text style={styles.welcomeTitle}>Dynamic Financial &amp; Civil Estimates</Text>
+                <Text style={styles.welcomeSubtitle}>
+                  Perform instant computations, compare tax codes, and estimate material costs with clean, stateless calculators.
+                </Text>
+              </View>
 
-        {activeTab === 'Calculators' && (
-          <View style={styles.calculatorShell}>
-            {/* Horizontal Sub-Selector */}
-            <ScrollView horizontal showsHorizontalScrollIndicator={false} style={styles.horizontalSelector}>
-              {calculatorsList.map((calc) => (
-                <TouchableOpacity
-                  key={calc}
-                  style={[styles.subTab, selectedCalculator === calc && styles.subTabActive]}
-                  onPress={() => setSelectedCalculator(calc)}
-                >
-                  <Text style={[styles.subTabText, selectedCalculator === calc && styles.subTabTextActive]}>
-                    {calc}
-                  </Text>
-                </TouchableOpacity>
-              ))}
-            </ScrollView>
+              <Text style={styles.sectionTitle}>Finance &amp; Wealth Utilities</Text>
+              <View style={styles.calculatorGrid}>
+                {calculatorsList.filter(c => c.category === 'Finance').map((calc) => (
+                  <TouchableOpacity 
+                    key={calc.id} 
+                    style={styles.gridCard}
+                    onPress={() => handleSelectCalculator(calc.id)}
+                  >
+                    <Text style={styles.cardIcon}>{calc.icon}</Text>
+                    <Text style={styles.cardTitle}>{calc.title}</Text>
+                    <Text style={styles.cardMeta}>Select to estimate</Text>
+                  </TouchableOpacity>
+                ))}
+              </View>
 
-            <View style={styles.calcBody}>
-              <Text style={styles.calcTitle}>{selectedCalculator} Estimator</Text>
-              <Text style={styles.cardText}>Interactive sliders &amp; charts are rendered native here.</Text>
-              
-              {/* Display mock input parameters */}
-              <View style={styles.mockInput}>
-                <Text style={styles.mockLabel}>Adjust parameters via touch inputs.</Text>
+              <Text style={styles.sectionTitle}>Construction Tools</Text>
+              <View style={styles.calculatorGrid}>
+                {calculatorsList.filter(c => c.category === 'Construction').map((calc) => (
+                  <TouchableOpacity 
+                    key={calc.id} 
+                    style={styles.gridCard}
+                    onPress={() => handleSelectCalculator(calc.id)}
+                  >
+                    <Text style={styles.cardIcon}>{calc.icon}</Text>
+                    <Text style={styles.cardTitle}>{calc.title}</Text>
+                    <Text style={styles.cardMeta}>Select to estimate</Text>
+                  </TouchableOpacity>
+                ))}
               </View>
             </View>
-          </View>
-        )}
+          )}
 
-        {activeTab === 'Saved' && (
-          <View style={styles.card}>
-            <Text style={styles.cardTitle}>Saved Logs</Text>
-            <Text style={styles.cardText}>No saved calculations found. Try running a calculator and clicking Save.</Text>
-          </View>
-        )}
+          {/* --- CALCULATORS TAB PANEL --- */}
+          {activeTab === 'Calculators' && (
+            <View style={styles.calcContainer}>
+              
+              {/* Horizontal Sub-Selector list */}
+              <ScrollView horizontal showsHorizontalScrollIndicator={false} style={styles.horizontalSelector}>
+                {calculatorsList.map((calc) => (
+                  <TouchableOpacity
+                    key={calc.id}
+                    style={[styles.selectorTab, selectedCalc === calc.id && styles.selectorTabActive]}
+                    onPress={() => setSelectedCalc(calc.id)}
+                  >
+                    <Text style={[styles.selectorTabText, selectedCalc === calc.id && styles.selectorTabTextActive]}>
+                      {calc.title.split(' ')[0]}
+                    </Text>
+                  </TouchableOpacity>
+                ))}
+              </ScrollView>
 
-        {activeTab === 'Insights' && (
-          <View style={styles.card}>
-            <Text style={styles.cardTitle}>Financial Advisory</Text>
-            <Text style={styles.cardText}>Run calculations to receive custom strategies on prepayment and tax harvesting.</Text>
-          </View>
-        )}
+              {/* ACTIVE CALCULATOR MODULE */}
+              <View style={styles.calculatorCard}>
+                
+                {/* 1. EMI CALCULATOR */}
+                {selectedCalc === 'emi' && (
+                  <View style={styles.calculatorView}>
+                    <Text style={styles.moduleTitle}>EMI Loan Estimator</Text>
+                    
+                    <View style={styles.inputGroup}>
+                      <Text style={styles.inputLabel}>Loan Principal Amount</Text>
+                      <TextInput 
+                        style={styles.textInput}
+                        keyboardType="numeric"
+                        value={emiLoan}
+                        onChangeText={setEmiLoan}
+                      />
+                    </View>
 
-        {activeTab === 'Profile' && (
-          <View style={styles.card}>
-            <Text style={styles.cardTitle}>My Profile</Text>
-            <Text style={styles.cardText}>Name: Guest User</Text>
-            <Text style={styles.cardText}>Preferred Currency: INR (₹)</Text>
-          </View>
-        )}
-      </ScrollView>
+                    <View style={styles.inputRow}>
+                      <View style={[styles.inputGroup, { flex: 1, marginRight: 8 }]}>
+                        <Text style={styles.inputLabel}>Rate (% p.a.)</Text>
+                        <TextInput 
+                          style={styles.textInput}
+                          keyboardType="numeric"
+                          value={emiRate}
+                          onChangeText={setEmiRate}
+                        />
+                      </View>
+                      <View style={[styles.inputGroup, { flex: 1, marginLeft: 8 }]}>
+                        <Text style={styles.inputLabel}>Tenure (Yrs)</Text>
+                        <TextInput 
+                          style={styles.textInput}
+                          keyboardType="numeric"
+                          value={emiTenure}
+                          onChangeText={setEmiTenure}
+                        />
+                      </View>
+                    </View>
 
-      {/* Bottom Tabs Navigation */}
+                    {/* Result outputs */}
+                    <View style={styles.resultsContainer}>
+                      <View style={styles.resultRow}>
+                        <Text style={styles.resultLabel}>Monthly EMI</Text>
+                        <Text style={styles.resultValueHighlight}>{formatCurrency(emiResult.emi)}</Text>
+                      </View>
+                      <View style={styles.resultRow}>
+                        <Text style={styles.resultLabel}>Total Interest</Text>
+                        <Text style={styles.resultValue}>{formatCurrency(emiResult.interest)}</Text>
+                      </View>
+                      <View style={styles.resultRow}>
+                        <Text style={styles.resultLabel}>Total Payment</Text>
+                        <Text style={styles.resultValue}>{formatCurrency(emiResult.total)}</Text>
+                      </View>
+                    </View>
+                  </View>
+                )}
+
+                {/* 2. SIP CALCULATOR */}
+                {selectedCalc === 'sip' && (
+                  <View style={styles.calculatorView}>
+                    <Text style={styles.moduleTitle}>SIP Growth Projector</Text>
+                    
+                    <View style={styles.inputGroup}>
+                      <Text style={styles.inputLabel}>Monthly SIP Amount</Text>
+                      <TextInput 
+                        style={styles.textInput}
+                        keyboardType="numeric"
+                        value={sipMonthly}
+                        onChangeText={setSipMonthly}
+                      />
+                    </View>
+
+                    <View style={styles.inputRow}>
+                      <View style={[styles.inputGroup, { flex: 1, marginRight: 8 }]}>
+                        <Text style={styles.inputLabel}>Expected Return (%)</Text>
+                        <TextInput 
+                          style={styles.textInput}
+                          keyboardType="numeric"
+                          value={sipRate}
+                          onChangeText={setSipRate}
+                        />
+                      </View>
+                      <View style={[styles.inputGroup, { flex: 1, marginLeft: 8 }]}>
+                        <Text style={styles.inputLabel}>Duration (Yrs)</Text>
+                        <TextInput 
+                          style={styles.textInput}
+                          keyboardType="numeric"
+                          value={sipTenure}
+                          onChangeText={setSipTenure}
+                        />
+                      </View>
+                    </View>
+
+                    {/* Result outputs */}
+                    <View style={styles.resultsContainer}>
+                      <View style={styles.resultRow}>
+                        <Text style={styles.resultLabel}>Future Value</Text>
+                        <Text style={styles.resultValueHighlight}>{formatCurrency(sipResult.total)}</Text>
+                      </View>
+                      <View style={styles.resultRow}>
+                        <Text style={styles.resultLabel}>Total Invested</Text>
+                        <Text style={styles.resultValue}>{formatCurrency(sipResult.invested)}</Text>
+                      </View>
+                      <View style={styles.resultRow}>
+                        <Text style={styles.resultLabel}>Est. Wealth Gain</Text>
+                        <Text style={[styles.resultValue, { color: '#10b981' }]}>{formatCurrency(sipResult.wealth)}</Text>
+                      </View>
+                    </View>
+                  </View>
+                )}
+
+                {/* 3. LOAN ELIGIBILITY */}
+                {selectedCalc === 'loan_eligibility' && (
+                  <View style={styles.calculatorView}>
+                    <Text style={styles.moduleTitle}>Loan Borrowing Limit</Text>
+                    
+                    <View style={styles.inputGroup}>
+                      <Text style={styles.inputLabel}>Net Monthly Income</Text>
+                      <TextInput 
+                        style={styles.textInput}
+                        keyboardType="numeric"
+                        value={income}
+                        onChangeText={setIncome}
+                      />
+                    </View>
+
+                    <View style={styles.inputGroup}>
+                      <Text style={styles.inputLabel}>Existing Monthly EMIs</Text>
+                      <TextInput 
+                        style={styles.textInput}
+                        keyboardType="numeric"
+                        value={existingEmi}
+                        onChangeText={setExistingEmi}
+                      />
+                    </View>
+
+                    <View style={styles.inputRow}>
+                      <View style={[styles.inputGroup, { flex: 1, marginRight: 8 }]}>
+                        <Text style={styles.inputLabel}>Interest Rate (%)</Text>
+                        <TextInput 
+                          style={styles.textInput}
+                          keyboardType="numeric"
+                          value={elRate}
+                          onChangeText={setElRate}
+                        />
+                      </View>
+                      <View style={[styles.inputGroup, { flex: 1, marginLeft: 8 }]}>
+                        <Text style={styles.inputLabel}>Tenure (Yrs)</Text>
+                        <TextInput 
+                          style={styles.textInput}
+                          keyboardType="numeric"
+                          value={elTenure}
+                          onChangeText={setElTenure}
+                        />
+                      </View>
+                    </View>
+
+                    {/* Result outputs */}
+                    <View style={styles.resultsContainer}>
+                      <View style={styles.resultRow}>
+                        <Text style={styles.resultLabel}>Max Eligible Loan</Text>
+                        <Text style={styles.resultValueHighlight}>{formatCurrency(elResult.maxLoan)}</Text>
+                      </View>
+                      <View style={styles.resultRow}>
+                        <Text style={styles.resultLabel}>Eligible Monthly EMI</Text>
+                        <Text style={styles.resultValue}>{formatCurrency(elResult.maxEmi)}</Text>
+                      </View>
+                    </View>
+                  </View>
+                )}
+
+                {/* 4. SALARY TAX CALCULATOR */}
+                {selectedCalc === 'tax' && (
+                  <View style={styles.calculatorView}>
+                    <Text style={styles.moduleTitle}>Salary Tax Slabs Compare</Text>
+                    
+                    <View style={styles.inputGroup}>
+                      <Text style={styles.inputLabel}>Gross Annual Salary</Text>
+                      <TextInput 
+                        style={styles.textInput}
+                        keyboardType="numeric"
+                        value={grossSalary}
+                        onChangeText={setGrossSalary}
+                      />
+                    </View>
+
+                    {/* Result outputs */}
+                    <View style={styles.resultsContainer}>
+                      <View style={styles.resultRow}>
+                        <Text style={styles.resultLabel}>New Slabs Tax (FY 25-26)</Text>
+                        <Text style={styles.resultValueHighlight}>{formatCurrency(taxResult.newTax)}</Text>
+                      </View>
+                      <View style={styles.resultRow}>
+                        <Text style={styles.resultLabel}>Old Slabs Tax</Text>
+                        <Text style={styles.resultValue}>{formatCurrency(taxResult.oldTax)}</Text>
+                      </View>
+                      <View style={styles.resultRow}>
+                        <Text style={styles.resultLabel}>Net Regime Savings</Text>
+                        <Text style={[styles.resultValue, { color: '#10b981', fontWeight: '800' }]}>
+                          {formatCurrency(Math.max(0, taxResult.oldTax - taxResult.newTax))}
+                        </Text>
+                      </View>
+                    </View>
+                  </View>
+                )}
+
+                {/* 5. CONSTRUCTION COST */}
+                {selectedCalc === 'construction' && (
+                  <View style={styles.calculatorView}>
+                    <Text style={styles.moduleTitle}>House Construction Cost</Text>
+                    
+                    <View style={styles.inputRow}>
+                      <View style={[styles.inputGroup, { flex: 1, marginRight: 8 }]}>
+                        <Text style={styles.inputLabel}>Plot Area (sqft)</Text>
+                        <TextInput 
+                          style={styles.textInput}
+                          keyboardType="numeric"
+                          value={area}
+                          onChangeText={setArea}
+                        />
+                      </View>
+                      <View style={[styles.inputGroup, { flex: 1, marginLeft: 8 }]}>
+                        <Text style={styles.inputLabel}>Total Floors</Text>
+                        <TextInput 
+                          style={styles.textInput}
+                          keyboardType="numeric"
+                          value={floors}
+                          onChangeText={setFloors}
+                        />
+                      </View>
+                    </View>
+
+                    <View style={styles.inputGroup}>
+                      <Text style={styles.inputLabel}>Material Grade Selection</Text>
+                      <View style={styles.gradeGrid}>
+                        {(['Standard', 'Premium', 'Luxury'] as const).map((g) => (
+                          <TouchableOpacity
+                            key={g}
+                            style={[styles.gradeBtn, grade === g && styles.gradeBtnActive]}
+                            onPress={() => setGrade(g)}
+                          >
+                            <Text style={[styles.gradeBtnText, grade === g && styles.gradeBtnTextActive]}>
+                              {g}
+                            </Text>
+                          </TouchableOpacity>
+                        ))}
+                      </View>
+                    </View>
+
+                    {/* Result outputs */}
+                    <View style={styles.resultsContainer}>
+                      <View style={styles.resultRow}>
+                        <Text style={styles.resultLabel}>Estimated Civil Cost</Text>
+                        <Text style={styles.resultValueHighlight}>{formatCurrency(constResult.total)}</Text>
+                      </View>
+                      <View style={styles.resultRow}>
+                        <Text style={styles.resultLabel}>Materials (58%)</Text>
+                        <Text style={styles.resultValue}>{formatCurrency(constResult.materials)}</Text>
+                      </View>
+                      <View style={styles.resultRow}>
+                        <Text style={styles.resultLabel}>Labor (25%)</Text>
+                        <Text style={styles.resultValue}>{formatCurrency(constResult.labor)}</Text>
+                      </View>
+                    </View>
+                  </View>
+                )}
+
+                {/* 6. TILE CALCULATOR */}
+                {selectedCalc === 'tiles' && (
+                  <View style={styles.calculatorView}>
+                    <Text style={styles.moduleTitle}>Floor &amp; Wall Tile Estimator</Text>
+                    
+                    <View style={styles.inputRow}>
+                      <View style={[styles.inputGroup, { flex: 1, marginRight: 8 }]}>
+                        <Text style={styles.inputLabel}>Length (ft)</Text>
+                        <TextInput 
+                          style={styles.textInput}
+                          keyboardType="numeric"
+                          value={length}
+                          onChangeText={setLength}
+                        />
+                      </View>
+                      <View style={[styles.inputGroup, { flex: 1, marginLeft: 8 }]}>
+                        <Text style={styles.inputLabel}>Width (ft)</Text>
+                        <TextInput 
+                          style={styles.textInput}
+                          keyboardType="numeric"
+                          value={width}
+                          onChangeText={setWidth}
+                        />
+                      </View>
+                    </View>
+
+                    <View style={styles.inputRow}>
+                      <View style={[styles.inputGroup, { flex: 1, marginRight: 8 }]}>
+                        <Text style={styles.inputLabel}>Tile size (ft)</Text>
+                        <TextInput 
+                          style={styles.textInput}
+                          keyboardType="numeric"
+                          value={tileSize}
+                          onChangeText={setTileSize}
+                        />
+                      </View>
+                      <View style={[styles.inputGroup, { flex: 1, marginLeft: 8 }]}>
+                        <Text style={styles.inputLabel}>Wastage (%)</Text>
+                        <TextInput 
+                          style={styles.textInput}
+                          keyboardType="numeric"
+                          value={wastage}
+                          onChangeText={setWastage}
+                        />
+                      </View>
+                    </View>
+
+                    {/* Result outputs */}
+                    <View style={styles.resultsContainer}>
+                      <View style={styles.resultRow}>
+                        <Text style={styles.resultLabel}>Total Purchase Required</Text>
+                        <Text style={styles.resultValueHighlight}>{Math.ceil(tilesResult.totalCount)} Tiles</Text>
+                      </View>
+                      <View style={styles.resultRow}>
+                        <Text style={styles.resultLabel}>Base Requirement</Text>
+                        <Text style={styles.resultValue}>{Math.ceil(tilesResult.baseCount)} Tiles</Text>
+                      </View>
+                    </View>
+                  </View>
+                )}
+
+              </View>
+            </View>
+          )}
+
+        </ScrollView>
+      </KeyboardAvoidingView>
+
+      {/* 2. FOOTER NAVIGATION TABS */}
       <View style={styles.tabBar}>
-        {(['Home', 'Calculators', 'Saved', 'Insights', 'Profile'] as ScreenTab[]).map((tab) => {
+        {(['Home', 'Calculators'] as ScreenTab[]).map((tab) => {
           const isActive = activeTab === tab;
           return (
-            <TouchableOpacity key={tab} style={styles.tabItem} onPress={() => setActiveTab(tab)}>
-              <Text style={[styles.tabLabel, isActive && styles.tabLabelActive]}>
-                {tab === 'Home' && '🏠'}
-                {tab === 'Calculators' && '🧮'}
-                {tab === 'Saved' && '🔖'}
-                {tab === 'Insights' && '📈'}
-                {tab === 'Profile' && '👤'}
+            <TouchableOpacity 
+              key={tab} 
+              style={styles.tabItem} 
+              onPress={() => setActiveTab(tab)}
+              activeOpacity={0.7}
+            >
+              <Text style={styles.tabIcon}>
+                {tab === 'Home' ? '🏠' : '🧮'}
               </Text>
-              <Text style={[styles.tabText, isActive && styles.tabTextActive]}>{tab}</Text>
+              <Text style={[styles.tabText, isActive && styles.tabTextActive]}>
+                {tab}
+              </Text>
             </TouchableOpacity>
           );
         })}
@@ -122,155 +636,267 @@ export default function App() {
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    backgroundColor: '#030712',
+    backgroundColor: '#f8fafc', // Clean Light theme bg
   },
   header: {
-    height: 60,
-    backgroundColor: '#0b0f19',
-    justifyContent: 'center',
+    height: 56,
+    backgroundColor: '#ffffff',
+    flexDirection: 'row',
+    alignItems: 'center',
+    justifyContent: 'space-between',
     paddingHorizontal: 20,
     borderBottomWidth: 1,
-    borderBottomColor: '#1e293b',
+    borderBottomColor: '#e2e8f0', // soft border separator
   },
-  headerTitle: {
-    color: '#38bdf8',
-    fontSize: 18,
-    fontWeight: 'bold',
+  headerBrand: {
+    fontSize: 20,
+    fontWeight: '900',
+    color: '#4f46e5', // Royal Indigo Brand color
+    fontFamily: Platform.OS === 'ios' ? 'System' : 'sans-serif-medium',
   },
-  headerSubtitle: {
-    color: '#9ca3af',
+  headerIndicator: {
     fontSize: 10,
-    marginTop: 2,
-    fontWeight: '600',
+    fontWeight: '800',
+    color: '#64748b',
     textTransform: 'uppercase',
+    letterSpacing: 1,
   },
-  body: {
-    padding: 20,
+  scrollBody: {
+    padding: 16,
+    paddingBottom: 40,
   },
-  card: {
-    backgroundColor: '#0b0f19',
-    borderRadius: 16,
+  homeContainer: {
+    flex: 1,
+  },
+  welcomeCard: {
+    backgroundColor: '#ffffff',
+    borderRadius: 20,
     padding: 20,
     borderWidth: 1,
-    borderColor: '#1e293b',
+    borderColor: '#e2e8f0',
     marginBottom: 20,
+    shadowColor: '#0f172a',
+    shadowOffset: { width: 0, height: 2 },
+    shadowOpacity: 0.04,
+    shadowRadius: 10,
+    elevation: 2,
   },
-  cardTitle: {
-    color: '#f3f4f6',
-    fontSize: 16,
-    fontWeight: 'bold',
-    marginBottom: 8,
+  welcomeTitle: {
+    fontSize: 18,
+    fontWeight: '800',
+    color: '#0f172a',
+    marginBottom: 6,
   },
-  cardText: {
-    color: '#9ca3af',
-    fontSize: 13,
+  welcomeSubtitle: {
+    fontSize: 12,
+    color: '#64748b',
     lineHeight: 18,
   },
-  grid: {
+  sectionTitle: {
+    fontSize: 13,
+    fontWeight: '800',
+    color: '#64748b',
+    textTransform: 'uppercase',
+    letterSpacing: 1,
+    marginBottom: 10,
+    marginTop: 10,
+  },
+  calculatorGrid: {
     flexDirection: 'row',
     flexWrap: 'wrap',
-    marginTop: 15,
     justifyContent: 'space-between',
+    marginBottom: 16,
   },
-  gridBtn: {
-    width: '48%',
-    backgroundColor: '#111827',
-    padding: 15,
-    borderRadius: 12,
-    marginBottom: 10,
+  gridCard: {
+    width: '48.5%',
+    backgroundColor: '#ffffff',
+    borderRadius: 16,
+    padding: 16,
     borderWidth: 1,
-    borderColor: '#1e293b',
-    alignItems: 'center',
+    borderColor: '#e2e8f0',
+    marginBottom: 12,
+    shadowColor: '#0f172a',
+    shadowOffset: { width: 0, height: 1 },
+    shadowOpacity: 0.02,
+    shadowRadius: 5,
+    elevation: 1,
   },
-  btnEmoji: {
-    fontSize: 22,
+  cardIcon: {
+    fontSize: 24,
+    marginBottom: 8,
   },
-  btnLabel: {
-    color: '#f3f4f6',
-    fontSize: 12,
-    fontWeight: '600',
-    marginTop: 6,
+  cardTitle: {
+    fontSize: 13,
+    fontWeight: '700',
+    color: '#0f172a',
+    marginBottom: 4,
   },
-  calculatorShell: {
+  cardMeta: {
+    fontSize: 9,
+    fontWeight: '700',
+    color: '#4f46e5',
+    textTransform: 'uppercase',
+  },
+  calcContainer: {
     flex: 1,
   },
   horizontalSelector: {
     flexDirection: 'row',
-    marginBottom: 15,
+    marginBottom: 16,
+    paddingVertical: 4,
   },
-  subTab: {
+  selectorTab: {
     paddingHorizontal: 16,
     paddingVertical: 8,
     borderRadius: 20,
-    backgroundColor: '#111827',
+    backgroundColor: '#ffffff',
     marginRight: 8,
     borderWidth: 1,
-    borderColor: '#1e293b',
+    borderColor: '#e2e8f0',
   },
-  subTabActive: {
-    backgroundColor: '#38bdf8',
-    borderColor: '#38bdf8',
+  selectorTabActive: {
+    backgroundColor: '#4f46e5',
+    borderColor: '#4f46e5',
   },
-  subTabText: {
-    color: '#9ca3af',
+  selectorTabText: {
+    color: '#64748b',
     fontSize: 11,
-    fontWeight: 'bold',
+    fontWeight: '800',
   },
-  subTabTextActive: {
-    color: '#030712',
+  selectorTabTextActive: {
+    color: '#ffffff',
   },
-  calcBody: {
-    backgroundColor: '#0b0f19',
-    borderRadius: 16,
+  calculatorCard: {
+    backgroundColor: '#ffffff',
+    borderRadius: 24,
     padding: 20,
     borderWidth: 1,
-    borderColor: '#1e293b',
+    borderColor: '#e2e8f0',
+    shadowColor: '#0f172a',
+    shadowOffset: { width: 0, height: 4 },
+    shadowOpacity: 0.05,
+    shadowRadius: 15,
+    elevation: 3,
   },
-  calcTitle: {
-    color: '#f3f4f6',
+  calculatorView: {
+    width: '100%',
+  },
+  moduleTitle: {
     fontSize: 18,
-    fontWeight: 'bold',
-    marginBottom: 8,
+    fontWeight: '800',
+    color: '#0f172a',
+    marginBottom: 16,
+    borderBottomWidth: 1,
+    borderBottomColor: '#f1f5f9',
+    paddingBottom: 8,
   },
-  mockInput: {
-    marginTop: 20,
-    backgroundColor: '#111827',
-    padding: 30,
-    borderRadius: 12,
+  inputGroup: {
+    marginBottom: 16,
+  },
+  inputRow: {
+    flexDirection: 'row',
+    justifyContent: 'space-between',
+  },
+  inputLabel: {
+    fontSize: 11,
+    fontWeight: '700',
+    color: '#64748b',
+    textTransform: 'uppercase',
+    marginBottom: 6,
+  },
+  textInput: {
+    height: 40,
+    backgroundColor: '#f8fafc',
     borderWidth: 1,
-    borderColor: '#1e293b',
-    borderStyle: 'dashed',
-    alignItems: 'center',
+    borderColor: '#cbd5e1',
+    borderRadius: 10,
+    paddingHorizontal: 12,
+    fontSize: 14,
+    color: '#0f172a',
+    fontWeight: '600',
   },
-  mockLabel: {
-    color: '#9ca3af',
-    fontSize: 12,
+  gradeGrid: {
+    flexDirection: 'row',
+    justifyContent: 'space-between',
+  },
+  gradeBtn: {
+    flex: 1,
+    height: 38,
+    alignItems: 'center',
+    justifyContent: 'center',
+    borderRadius: 10,
+    borderWidth: 1,
+    borderColor: '#e2e8f0',
+    marginHorizontal: 4,
+    backgroundColor: '#ffffff',
+  },
+  gradeBtnActive: {
+    backgroundColor: '#4f46e5',
+    borderColor: '#4f46e5',
+  },
+  gradeBtnText: {
+    fontSize: 11,
+    fontWeight: '700',
+    color: '#64748b',
+  },
+  gradeBtnTextActive: {
+    color: '#ffffff',
+  },
+  resultsContainer: {
+    marginTop: 8,
+    backgroundColor: '#f8fafc',
+    borderRadius: 16,
+    padding: 16,
+    borderWidth: 1,
+    borderColor: '#e2e8f0',
+  },
+  resultRow: {
+    flexDirection: 'row',
+    justifyContent: 'space-between',
+    alignItems: 'center',
+    paddingVertical: 8,
+    borderBottomWidth: 1,
+    borderBottomColor: '#f1f5f9',
+  },
+  resultLabel: {
+    fontSize: 11,
+    fontWeight: '700',
+    color: '#64748b',
+    textTransform: 'uppercase',
+  },
+  resultValue: {
+    fontSize: 13,
+    fontWeight: '700',
+    color: '#0f172a',
+  },
+  resultValueHighlight: {
+    fontSize: 15,
+    fontWeight: '900',
+    color: '#4f46e5',
   },
   tabBar: {
     flexDirection: 'row',
-    height: 60,
-    backgroundColor: '#0b0f19',
+    height: 56,
+    backgroundColor: '#ffffff',
     borderTopWidth: 1,
-    borderTopColor: '#1e293b',
+    borderTopColor: '#e2e8f0',
+    paddingBottom: Platform.OS === 'ios' ? 12 : 0,
   },
   tabItem: {
     flex: 1,
     alignItems: 'center',
     justifyContent: 'center',
   },
-  tabLabel: {
-    fontSize: 18,
-  },
-  tabLabelActive: {
-    opacity: 1,
+  tabIcon: {
+    fontSize: 20,
+    marginBottom: 2,
   },
   tabText: {
-    color: '#9ca3af',
+    color: '#94a3b8',
     fontSize: 10,
-    marginTop: 2,
-    fontWeight: '600',
+    fontWeight: '700',
   },
   tabTextActive: {
-    color: '#38bdf8',
+    color: '#4f46e5',
   },
 });
