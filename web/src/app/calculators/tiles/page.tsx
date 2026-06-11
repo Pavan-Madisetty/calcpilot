@@ -9,12 +9,12 @@ export const metadata: Metadata = {
   description: 'Calculate the total number of tiles and boxes required for your room floor or wall. Enter dimensions, tile size, and add wastage percentage to get estimates.',
   keywords: ['Tile Calculator', 'Flooring Area Calculator', 'Wall Tiles Estimator', 'Tiles Wastage Buffer', 'Home Renovation Budgeting'],
   alternates: {
-    canonical: 'https://Pavan-Madisetty.github.io/calcpilot/calculators/tiles',
+    canonical: 'https://zeroemi.in/calculators/tiles',
   },
   openGraph: {
-    title: 'Tile & Flooring Calculator - CalcPilot',
+    title: 'Tile & Flooring Calculator - ZeroEMI',
     description: 'Estimate required flooring or wall tile boxes including breakage buffers instantly.',
-    url: 'https://Pavan-Madisetty.github.io/calcpilot/calculators/tiles',
+    url: 'https://zeroemi.in/calculators/tiles',
     type: 'website',
   },
 };
@@ -23,7 +23,7 @@ export default function TileCalculatorPage() {
   const schemaApp = {
     '@context': 'https://schema.org',
     '@type': 'WebApplication',
-    'name': 'Tile Calculator - CalcPilot',
+    'name': 'Tile Calculator - ZeroEMI',
     'description': 'Calculate required flooring or wall tile boxes including breakage buffers.',
     'applicationCategory': 'ConstructionApplication',
     'operatingSystem': 'All',

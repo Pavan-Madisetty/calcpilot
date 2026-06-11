@@ -1,0 +1,25 @@
+{
+  "expo": {
+    "name": "ZeroEMI",
+    "slug": "zeroemi-mobile",
+    "owner": "zeroemi",
+    "version": "1.0.0",
+    "orientation": "portrait",
+    "splash": {
+      "resizeMode": "contain",
+      "backgroundColor": "#ffffff"
+    },
+    "ios": {
+      "supportsTablet": true,
+      "bundleIdentifier": "in.zeroemi.app"
+    },
+    "android": {
+      "package": "in.zeroemi.app"
+    },
+    "extra": {
+      "eas": {
+        "projectId": "cb001b6d-2afa-4b1b-9320-7f131a67916e"
+      }
+    }
+  }
+}

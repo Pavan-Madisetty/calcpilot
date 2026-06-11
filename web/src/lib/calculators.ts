@@ -1,5 +1,5 @@
 /**
- * CalcPilot Core Math & Calculator Engines
+ * ZeroEMI Core Math & Calculator Engines
  */
 
 // ==========================================

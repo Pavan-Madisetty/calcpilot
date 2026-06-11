@@ -50,7 +50,7 @@ export default function PublicLayout({
           {/* Logo Brand without icon */}
           <Link href="/" className="flex items-center cursor-pointer">
             <span className="font-extrabold text-xl font-display text-indigo-600 tracking-tight">
-              CalcPilot
+              ZeroEMI
             </span>
           </Link>
 

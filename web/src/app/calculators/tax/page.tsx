@@ -9,12 +9,12 @@ export const metadata: Metadata = {
   description: 'Compare Old vs New Indian Income Tax regime slabs side-by-side for FY 2025-26 and FY 2026-27. Compute HRA exemptions, Section 80C, 80D, and optimize salary deductions.',
   keywords: ['Income Tax Calculator', 'Old vs New Tax Slabs', 'FY 2025-26 Tax Calculator', 'India Tax Exemptions', 'Standard Deduction'],
   alternates: {
-    canonical: 'https://Pavan-Madisetty.github.io/calcpilot/calculators/tax',
+    canonical: 'https://zeroemi.in/calculators/tax',
   },
   openGraph: {
-    title: 'Salary Income Tax Calculator - CalcPilot',
+    title: 'Salary Income Tax Calculator - ZeroEMI',
     description: 'Compare Old vs New Indian Income Tax regimes with dynamic deductions assessment side-by-side.',
-    url: 'https://Pavan-Madisetty.github.io/calcpilot/calculators/tax',
+    url: 'https://zeroemi.in/calculators/tax',
     type: 'website',
   },
 };
@@ -23,7 +23,7 @@ export default function SalaryTaxCalculatorPage() {
   const schemaApp = {
     '@context': 'https://schema.org',
     '@type': 'WebApplication',
-    'name': 'Salary Income Tax Calculator - CalcPilot',
+    'name': 'Salary Income Tax Calculator - ZeroEMI',
     'description': 'Compare Old vs New Indian Income Tax regimes side-by-side with dynamic deductions assessment.',
     'applicationCategory': 'FinanceApplication',
     'operatingSystem': 'All',

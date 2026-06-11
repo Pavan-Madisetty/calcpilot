@@ -45,7 +45,7 @@ export interface AnalyticsLog {
 // Initial defaults
 const DEFAULT_PROFILE: UserProfile = {
   name: 'Guest User',
-  email: 'guest@calcpilot.in',
+  email: 'guest@zeroemi.in',
   country: 'India',
   currency: 'INR',
   defaultLoanType: 'Home',
@@ -87,18 +87,18 @@ const DEFAULT_ADS: AdCampaign[] = [
 
 export function getProfile(): UserProfile {
   if (typeof window === 'undefined') return DEFAULT_PROFILE;
-  const data = localStorage.getItem('calcpilot-profile');
+  const data = localStorage.getItem('zeroemi-profile');
   return data ? JSON.parse(data) : DEFAULT_PROFILE;
 }
 
 export function saveProfile(profile: UserProfile): void {
   if (typeof window === 'undefined') return;
-  localStorage.setItem('calcpilot-profile', JSON.stringify(profile));
+  localStorage.setItem('zeroemi-profile', JSON.stringify(profile));
 }
 
 export function getSavedCalculations(): SavedCalculation[] {
   if (typeof window === 'undefined') return [];
-  const data = localStorage.getItem('calcpilot-saved');
+  const data = localStorage.getItem('zeroemi-saved');
   return data ? JSON.parse(data) : [];
 }
 
@@ -110,7 +110,7 @@ export function saveCalculation(calc: Omit<SavedCalculation, 'id' | 'timestamp'>
     timestamp: new Date().toISOString(),
   };
   list.unshift(newCalc);
-  localStorage.setItem('calcpilot-saved', JSON.stringify(list));
+  localStorage.setItem('zeroemi-saved', JSON.stringify(list));
   
   // Log analytics event
   logAnalytics(calc.type);
@@ -120,7 +120,7 @@ export function saveCalculation(calc: Omit<SavedCalculation, 'id' | 'timestamp'>
 export function deleteSavedCalculation(id: string): void {
   const list = getSavedCalculations();
   const filtered = list.filter((item) => item.id !== id);
-  localStorage.setItem('calcpilot-saved', JSON.stringify(filtered));
+  localStorage.setItem('zeroemi-saved', JSON.stringify(filtered));
 }
 
 export function renameSavedCalculation(id: string, newName: string): void {
@@ -131,18 +131,18 @@ export function renameSavedCalculation(id: string, newName: string): void {
     }
     return item;
   });
-  localStorage.setItem('calcpilot-saved', JSON.stringify(updated));
+  localStorage.setItem('zeroemi-saved', JSON.stringify(updated));
 }
 
 export function getAds(): AdCampaign[] {
   if (typeof window === 'undefined') return DEFAULT_ADS;
-  const data = localStorage.getItem('calcpilot-ads');
+  const data = localStorage.getItem('zeroemi-ads');
   return data ? JSON.parse(data) : DEFAULT_ADS;
 }
 
 export function saveAds(ads: AdCampaign[]): void {
   if (typeof window === 'undefined') return;
-  localStorage.setItem('calcpilot-ads', JSON.stringify(ads));
+  localStorage.setItem('zeroemi-ads', JSON.stringify(ads));
 }
 
 export function logAdClick(adId: string): void {
@@ -169,7 +169,7 @@ export function logAdImpression(adId: string): void {
 
 export function getAnalytics(): AnalyticsLog[] {
   if (typeof window === 'undefined') return [];
-  const data = localStorage.getItem('calcpilot-analytics');
+  const data = localStorage.getItem('zeroemi-analytics');
   return data ? JSON.parse(data) : [];
 }
 
@@ -183,13 +183,13 @@ export function logAnalytics(calculatorType: string): void {
     durationSeconds: Math.floor(Math.random() * 120) + 30, // simulated session duration
   };
   logs.push(newLog);
-  localStorage.setItem('calcpilot-analytics', JSON.stringify(logs));
+  localStorage.setItem('zeroemi-analytics', JSON.stringify(logs));
 }
 
 export function clearAllData(): void {
   if (typeof window === 'undefined') return;
-  localStorage.removeItem('calcpilot-profile');
-  localStorage.removeItem('calcpilot-saved');
-  localStorage.removeItem('calcpilot-ads');
-  localStorage.removeItem('calcpilot-analytics');
+  localStorage.removeItem('zeroemi-profile');
+  localStorage.removeItem('zeroemi-saved');
+  localStorage.removeItem('zeroemi-ads');
+  localStorage.removeItem('zeroemi-analytics');
 }

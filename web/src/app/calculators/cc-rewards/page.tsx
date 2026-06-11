@@ -9,12 +9,12 @@ export const metadata: Metadata = {
   description: 'Evaluate points, airline miles, cashback, and net yield percentages across premium Indian credit cards (HDFC Infinia, Axis Atlas, SBI Card). Optimize your category spends.',
   keywords: ['Credit Card Rewards', 'Points Calculator', 'Airlines Miles Transfer', 'Indian Credit Cards Comparison', 'Cashback Rate Yield'],
   alternates: {
-    canonical: 'https://Pavan-Madisetty.github.io/calcpilot/calculators/cc-rewards',
+    canonical: 'https://zeroemi.in/calculators/cc-rewards',
   },
   openGraph: {
-    title: 'Credit Card Rewards Calculator - CalcPilot',
+    title: 'Credit Card Rewards Calculator - ZeroEMI',
     description: 'Optimize points, air miles, and cashbacks across premium credit cards based on your spending patterns.',
-    url: 'https://Pavan-Madisetty.github.io/calcpilot/calculators/cc-rewards',
+    url: 'https://zeroemi.in/calculators/cc-rewards',
     type: 'website',
   },
 };
@@ -23,7 +23,7 @@ export default function CreditCardRewardsCalculatorPage() {
   const schemaApp = {
     '@context': 'https://schema.org',
     '@type': 'WebApplication',
-    'name': 'Credit Card Rewards Calculator - CalcPilot',
+    'name': 'Credit Card Rewards Calculator - ZeroEMI',
     'description': 'Evaluate points, airline miles, and yields across premium Indian credit cards.',
     'applicationCategory': 'FinanceApplication',
     'operatingSystem': 'All',

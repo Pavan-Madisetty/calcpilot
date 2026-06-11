@@ -1,4 +1,4 @@
-name: Deploy CalcPilot to GitHub Pages
+name: Deploy ZeroEMI to GitHub Pages
 
 on:
   push:

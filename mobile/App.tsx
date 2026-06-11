@@ -202,7 +202,7 @@ export default function App() {
       
       {/* 1. PREMIUM HEADER BRAND */}
       <View style={styles.header}>
-        <Text style={styles.headerBrand}>CalcPilot</Text>
+        <Text style={styles.headerBrand}>ZeroEMI</Text>
         <Text style={styles.headerIndicator}>{activeTab}</Text>
       </View>
 

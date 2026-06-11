@@ -7,8 +7,8 @@ const nextConfig: NextConfig = {
   images: {
     unoptimized: true,
   },
-  // Adjust base path for GitHub Pages subfolder deployment if building in CI
-  basePath: isGithubActions ? '/calcpilot' : '',
+  // The site is hosted on a custom root domain zeroemi.in, so basePath is empty
+  basePath: '',
 };
 
 export default nextConfig;

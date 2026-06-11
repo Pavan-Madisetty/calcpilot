@@ -10,6 +10,6 @@ export default function robots(): MetadataRoute.Robots {
       allow: '/',
       disallow: ['/admin', '/admin/'],
     },
-    sitemap: 'https://Pavan-Madisetty.github.io/calcpilot/sitemap.xml',
+    sitemap: 'https://zeroemi.in/sitemap.xml',
   };
 }

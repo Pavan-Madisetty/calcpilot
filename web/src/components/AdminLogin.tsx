@@ -29,8 +29,8 @@ export default function AdminLogin({ onLoginSuccess }: AdminLoginProps) {
 
   useEffect(() => {
     // Initialize default password in local storage if not already there
-    if (typeof window !== 'undefined' && !localStorage.getItem('calcpilot-admin-pass')) {
-      localStorage.setItem('calcpilot-admin-pass', DEFAULT_PASSWORD);
+    if (typeof window !== 'undefined' && !localStorage.getItem('zeroemi-admin-pass')) {
+      localStorage.setItem('zeroemi-admin-pass', DEFAULT_PASSWORD);
     }
   }, []);
 
@@ -40,7 +40,7 @@ export default function AdminLogin({ onLoginSuccess }: AdminLoginProps) {
 
     if (typeof window === 'undefined') return;
 
-    const savedPass = localStorage.getItem('calcpilot-admin-pass') || DEFAULT_PASSWORD;
+    const savedPass = localStorage.getItem('zeroemi-admin-pass') || DEFAULT_PASSWORD;
 
     // Validate case-insensitively or matching EXACT username case
     if (username.toLowerCase() === DEFAULT_USERNAME.toLowerCase() && password === savedPass) {
@@ -84,7 +84,7 @@ export default function AdminLogin({ onLoginSuccess }: AdminLoginProps) {
     }
 
     if (typeof window !== 'undefined') {
-      localStorage.setItem('calcpilot-admin-pass', newPassword);
+      localStorage.setItem('zeroemi-admin-pass', newPassword);
       setNotifMsg('Password reset successfully! Redirecting to sign in...');
       
       setTimeout(() => {

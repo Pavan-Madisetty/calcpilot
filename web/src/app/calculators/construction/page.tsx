@@ -9,12 +9,12 @@ export const metadata: Metadata = {
   description: 'Estimate home construction costs, material requirements (cement, sand, bricks, steel), and labor charges instantly based on plot size and floors.',
   keywords: ['Construction Cost Calculator', 'Home Building Estimator', 'Civil Cost Calculator', 'Material Requirements sand bricks', 'Labor Cost Distribution'],
   alternates: {
-    canonical: 'https://Pavan-Madisetty.github.io/calcpilot/calculators/construction',
+    canonical: 'https://zeroemi.in/calculators/construction',
   },
   openGraph: {
-    title: 'Construction Cost Calculator - CalcPilot',
+    title: 'Construction Cost Calculator - ZeroEMI',
     description: 'Estimate home building cost, material requirements, and labor budgets dynamically.',
-    url: 'https://Pavan-Madisetty.github.io/calcpilot/calculators/construction',
+    url: 'https://zeroemi.in/calculators/construction',
     type: 'website',
   },
 };
@@ -23,7 +23,7 @@ export default function ConstructionCostCalculatorPage() {
   const schemaApp = {
     '@context': 'https://schema.org',
     '@type': 'WebApplication',
-    'name': 'Construction Cost Calculator - CalcPilot',
+    'name': 'Construction Cost Calculator - ZeroEMI',
     'description': 'Estimate home construction costs, material components, and labor charges.',
     'applicationCategory': 'ConstructionApplication',
     'operatingSystem': 'All',

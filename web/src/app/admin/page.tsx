@@ -11,7 +11,7 @@ export default function AdminPage() {
 
   useEffect(() => {
     if (typeof window !== 'undefined') {
-      const loggedIn = localStorage.getItem('calcpilot-admin-auth') === 'true';
+      const loggedIn = localStorage.getItem('zeroemi-admin-auth') === 'true';
       setIsAdminLoggedIn(loggedIn);
     }
     setMounted(true);
@@ -19,12 +19,12 @@ export default function AdminPage() {
 
   const handleAdminSuccess = () => {
     setIsAdminLoggedIn(true);
-    localStorage.setItem('calcpilot-admin-auth', 'true');
+    localStorage.setItem('zeroemi-admin-auth', 'true');
   };
 
   const handleSignOut = () => {
     setIsAdminLoggedIn(false);
-    localStorage.removeItem('calcpilot-admin-auth');
+    localStorage.removeItem('zeroemi-admin-auth');
   };
 
   if (!mounted) return null;
@@ -36,7 +36,7 @@ export default function AdminPage() {
         <div className="max-w-5xl mx-auto px-4 md:px-6 h-full flex items-center justify-between">
           <div className="flex items-center gap-2">
             <span className="font-extrabold text-lg text-indigo-600 tracking-tight">
-              CalcPilot Console
+              ZeroEMI Console
             </span>
           </div>
 

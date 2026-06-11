@@ -9,12 +9,12 @@ export const metadata: Metadata = {
   description: 'Estimate your monthly loan payments, interest charges, and total payback with our free EMI Loan Calculator. View complete yearly amortization schedules.',
   keywords: ['EMI Calculator', 'Loan Calculator', 'Home Loan EMI', 'Personal Loan EMI', 'Amortization Breakdowns'],
   alternates: {
-    canonical: 'https://Pavan-Madisetty.github.io/calcpilot/calculators/emi',
+    canonical: 'https://zeroemi.in/calculators/emi',
   },
   openGraph: {
-    title: 'EMI Loan Calculator - CalcPilot',
+    title: 'EMI Loan Calculator - ZeroEMI',
     description: 'Calculate monthly loan EMIs and view full amortization breakdown schedules instantly.',
-    url: 'https://Pavan-Madisetty.github.io/calcpilot/calculators/emi',
+    url: 'https://zeroemi.in/calculators/emi',
     type: 'website',
   },
 };
@@ -23,7 +23,7 @@ export default function EmiCalculatorPage() {
   const schemaApp = {
     '@context': 'https://schema.org',
     '@type': 'WebApplication',
-    'name': 'EMI Loan Calculator - CalcPilot',
+    'name': 'EMI Loan Calculator - ZeroEMI',
     'description': 'Compute monthly loan EMIs, interest details, and view full amortization logs.',
     'applicationCategory': 'FinanceApplication',
     'operatingSystem': 'All',

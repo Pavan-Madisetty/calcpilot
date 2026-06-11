@@ -4,7 +4,7 @@ export const dynamic = 'force-static';
 
 
 export default function sitemap(): MetadataRoute.Sitemap {
-  const baseUrl = 'https://Pavan-Madisetty.github.io/calcpilot';
+  const baseUrl = 'https://zeroemi.in';
   const currentDate = new Date();
 
   const routes = [

@@ -9,12 +9,12 @@ export const metadata: Metadata = {
   description: 'Estimate the future value of your monthly mutual fund or equity SIP investments with our free SIP growth calculator. View yearly compound interest distributions.',
   keywords: ['SIP Calculator', 'Mutual Fund Calculator', 'Compound Interest', 'SIP Wealth Projection', 'Investment Returns'],
   alternates: {
-    canonical: 'https://Pavan-Madisetty.github.io/calcpilot/calculators/sip',
+    canonical: 'https://zeroemi.in/calculators/sip',
   },
   openGraph: {
-    title: 'SIP Mutual Fund Calculator - CalcPilot',
+    title: 'SIP Mutual Fund Calculator - ZeroEMI',
     description: 'Project future compound growth and wealth gained from monthly mutual fund SIPs instantly.',
-    url: 'https://Pavan-Madisetty.github.io/calcpilot/calculators/sip',
+    url: 'https://zeroemi.in/calculators/sip',
     type: 'website',
   },
 };
@@ -23,7 +23,7 @@ export default function SipCalculatorPage() {
   const schemaApp = {
     '@context': 'https://schema.org',
     '@type': 'WebApplication',
-    'name': 'SIP Calculator - CalcPilot',
+    'name': 'SIP Calculator - ZeroEMI',
     'description': 'Project future compound growth wealth gained from monthly mutual fund SIPs.',
     'applicationCategory': 'FinanceApplication',
     'operatingSystem': 'All',

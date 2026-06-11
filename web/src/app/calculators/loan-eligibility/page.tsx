@@ -9,12 +9,12 @@ export const metadata: Metadata = {
   description: 'Determine your maximum home, personal, or car loan borrowing capacity with our free bank eligibility estimator. Calculate FOIR and debt-to-income (DTI) ratings.',
   keywords: ['Loan Eligibility', 'Home Loan Eligibility', 'DTI Calculator', 'FOIR Cap Limit', 'Borrowing Capacity Estimator'],
   alternates: {
-    canonical: 'https://Pavan-Madisetty.github.io/calcpilot/calculators/loan-eligibility',
+    canonical: 'https://zeroemi.in/calculators/loan-eligibility',
   },
   openGraph: {
-    title: 'Loan Eligibility Calculator - CalcPilot',
+    title: 'Loan Eligibility Calculator - ZeroEMI',
     description: 'Assess maximum bank sanction capacity and debt-to-income (DTI) ratings instantly.',
-    url: 'https://Pavan-Madisetty.github.io/calcpilot/calculators/loan-eligibility',
+    url: 'https://zeroemi.in/calculators/loan-eligibility',
     type: 'website',
   },
 };
@@ -23,7 +23,7 @@ export default function LoanEligibilityCalculatorPage() {
   const schemaApp = {
     '@context': 'https://schema.org',
     '@type': 'WebApplication',
-    'name': 'Loan Eligibility Calculator - CalcPilot',
+    'name': 'Loan Eligibility Calculator - ZeroEMI',
     'description': 'Assess maximum bank sanction capacity and debt-to-income (DTI) ratings.',
     'applicationCategory': 'FinanceApplication',
     'operatingSystem': 'All',

@@ -1,6 +1,6 @@
 import { calculateEmi, calculateSip, calculateSalaryTax } from './calculators';
 
-describe('CalcPilot Core Math Engines', () => {
+describe('ZeroEMI Core Math Engines', () => {
   
   // Test EMI Math
   test('EMI Calculator - Should yield exact EMI and interest for standard values', () => {
