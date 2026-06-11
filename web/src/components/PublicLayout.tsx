@@ -21,24 +21,30 @@ export default function PublicLayout({
 
   const handleSearchSubmit = (e: React.FormEvent) => {
     e.preventDefault();
-    if (onSearchChange) {
-      onSearchChange(localSearch);
-    } else {
-      // If we are on a calculator page and search, redirect to home page with query
-      router.push(`/?search=${encodeURIComponent(localSearch)}`);
-    }
-  };
+    const query = localSearch.trim().toLowerCase();
+    if (!query) return;
 
-  const navItems = [
-    { label: 'Home', href: '/' },
-    { label: 'Calculators', href: '/calculators/emi' }
-  ];
+    const calculators = [
+      { id: 'emi', keywords: ['emi', 'loan', 'payment', 'mortgage', 'monthly', 'interest'] },
+      { id: 'loan-eligibility', keywords: ['eligibility', 'eligible', 'limit', 'sanction', 'capacity', 'debt', 'bank'] },
+      { id: 'no-cost-emi', keywords: ['no cost', 'zero emi', 'decoder', 'gst', 'processing fee', 'apr', 'hidden'] },
+      { id: 'cc-rewards', keywords: ['credit card', 'reward', 'points', 'miles', 'cashback', 'card'] },
+      { id: 'sip', keywords: ['sip', 'mutual fund', 'investment', 'compound', 'wealth', 'future value'] },
+      { id: 'tax', keywords: ['tax', 'income tax', 'slabs', 'regime', 'new regime', 'old regime'] },
+      { id: 'in-hand-salary', keywords: ['in hand', 'salary', 'take home', 'ctc', 'take-home', 'takehome'] },
+      { id: 'hra', keywords: ['hra', 'rent', 'house rent', 'allowance', 'exemption'] },
+      { id: 'construction', keywords: ['construction', 'cost', 'material', 'labor', 'brick', 'cement', 'civil'] },
+      { id: 'tiles', keywords: ['tiles', 'flooring', 'wall', 'box', 'area', 'tile'] }
+    ];
 
-  const isTabActive = (href: string) => {
-    if (href === '/') {
-      return pathname === '/';
+    const matched = calculators.find(calc => 
+      calc.id.includes(query) || 
+      calc.keywords.some(kw => kw.includes(query) || query.includes(kw))
+    );
+
+    if (matched) {
+      router.push(`/calculators/${matched.id}`);
     }
-    return pathname.startsWith('/calculators');
   };
 
   return (
@@ -54,26 +60,6 @@ export default function PublicLayout({
               ZeroEMI
             </span>
           </Link>
-
-          {/* Desktop Navigation Tabs */}
-          <nav className="hidden md:flex items-center gap-1">
-            {navItems.map((item) => {
-              const active = isTabActive(item.href);
-              return (
-                <Link
-                  key={item.href}
-                  href={item.href}
-                  className={`px-4 py-2 rounded-xl text-xs font-bold transition cursor-pointer ${
-                    active
-                      ? 'bg-indigo-50 text-indigo-600 font-extrabold'
-                      : 'text-slate-600 hover:bg-slate-50'
-                  }`}
-                >
-                  {item.label}
-                </Link>
-              );
-            })}
-          </nav>
 
           {/* Quick Actions */}
           <div className="flex items-center gap-3">
@@ -101,28 +87,6 @@ export default function PublicLayout({
       <main className="flex-1 max-w-5xl w-full mx-auto p-4 md:p-6 pb-20">
         {children}
       </main>
-
-      {/* 2. MOBILE BOTTOM NAVIGATION */}
-      <nav className="flex md:hidden fixed bottom-0 left-0 right-0 items-center justify-around border-t border-slate-200 bg-white h-16 z-30 shadow-inner pb-safe">
-        {navItems.map((item) => {
-          const active = isTabActive(item.href);
-          return (
-            <Link
-              key={item.href}
-              href={item.href}
-              className={`flex flex-col items-center justify-center w-12 h-12 rounded-xl transition cursor-pointer ${
-                active ? 'text-indigo-600 font-bold' : 'text-slate-500'
-              }`}
-            >
-              <span className="text-sm font-semibold">
-                {item.label === 'Home' && '🏠'}
-                {item.label === 'Calculators' && '🧮'}
-              </span>
-              <span className="text-[9px] font-semibold mt-0.5">{item.label}</span>
-            </Link>
-          );
-        })}
-      </nav>
     </div>
   );
 }

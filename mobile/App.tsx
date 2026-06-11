@@ -12,10 +12,7 @@ import {
   Platform
 } from 'react-native';
 
-type ScreenTab = 'Home' | 'Calculators';
-
 export default function App() {
-  const [activeTab, setActiveTab] = useState<ScreenTab>('Home');
   const [selectedCategory, setSelectedCategory] = useState<string>('Finance & Loans');
   const [selectedCalc, setSelectedCalc] = useState<string>('emi');
 
@@ -464,12 +461,7 @@ export default function App() {
   ]);
 
 
-  // Handle select calc from Home Dashboard
-  const handleSelectCalculator = (id: string, category: string) => {
-    setSelectedCalc(id);
-    setSelectedCategory(category);
-    setActiveTab('Calculators');
-  };
+  // Calculator logic
 
   return (
     <SafeAreaView style={styles.container}>
@@ -478,7 +470,7 @@ export default function App() {
       {/* 1. HEADER BRAND */}
       <View style={styles.header}>
         <Text style={styles.headerBrand}>ZeroEMI</Text>
-        <Text style={styles.headerIndicator}>{activeTab}</Text>
+        <Text style={styles.headerIndicator}>Suite</Text>
       </View>
 
       <KeyboardAvoidingView
@@ -487,40 +479,7 @@ export default function App() {
       >
         <ScrollView contentContainerStyle={styles.scrollBody} keyboardShouldPersistTaps="handled">
           
-          {/* --- HOME TAB PANEL --- */}
-          {activeTab === 'Home' && (
-            <View style={styles.homeContainer}>
-              <View style={styles.welcomeCard}>
-                <Text style={styles.welcomeTitle}>Dynamic Financial &amp; Civil Estimates</Text>
-                <Text style={styles.welcomeSubtitle}>
-                  Perform instant computations, compare tax codes, and estimate material costs with clean, stateless calculators.
-                </Text>
-              </View>
-
-              {categoriesList.map((cat) => (
-                <View key={cat}>
-                  <Text style={styles.sectionTitle}>{cat}</Text>
-                  <View style={styles.calculatorGrid}>
-                    {calculatorsList.filter(c => c.category === cat).map((calc) => (
-                      <TouchableOpacity 
-                        key={calc.id} 
-                        style={styles.gridCard}
-                        onPress={() => handleSelectCalculator(calc.id, cat)}
-                      >
-                        <Text style={styles.cardIcon}>{calc.icon}</Text>
-                        <Text style={styles.cardTitle}>{calc.title}</Text>
-                        <Text style={styles.cardMeta}>Estimate Now</Text>
-                      </TouchableOpacity>
-                    ))}
-                  </View>
-                </View>
-              ))}
-            </View>
-          )}
-
-          {/* --- CALCULATORS TAB PANEL --- */}
-          {activeTab === 'Calculators' && (
-            <View style={styles.calcContainer}>
+          <View style={styles.calcContainer}>
               
               {/* Category selector row */}
               <ScrollView horizontal showsHorizontalScrollIndicator={false} style={styles.horizontalSelector}>
@@ -1103,32 +1062,9 @@ export default function App() {
 
               </View>
             </View>
-          )}
 
         </ScrollView>
       </KeyboardAvoidingView>
-
-      {/* FOOTER NAVIGATION TABS */}
-      <View style={styles.tabBar}>
-        {(['Home', 'Calculators'] as ScreenTab[]).map((tab) => {
-          const isActive = activeTab === tab;
-          return (
-            <TouchableOpacity 
-              key={tab} 
-              style={styles.tabItem} 
-              onPress={() => setActiveTab(tab)}
-              activeOpacity={0.7}
-            >
-              <Text style={styles.tabIcon}>
-                {tab === 'Home' ? '🏠' : '🧮'}
-              </Text>
-              <Text style={[styles.tabText, isActive && styles.tabTextActive]}>
-                {tab}
-              </Text>
-            </TouchableOpacity>
-          );
-        })}
-      </View>
     </SafeAreaView>
   );
 }
