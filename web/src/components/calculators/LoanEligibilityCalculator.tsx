@@ -236,8 +236,44 @@ export default function LoanEligibilityCalculator() {
         </div>
 
         {/* Outputs */}
-        <div className="lg:col-span-6 bg-white border border-slate-200 p-6 rounded-2xl shadow-sm flex flex-col justify-between space-y-6">
-          <div className="space-y-6">
+        <div className="lg:col-span-6 space-y-6">
+          {/* Max Loan Eligible result card */}
+          <div className="bg-gradient-to-tr from-indigo-900 to-slate-900 text-white p-6 rounded-2xl shadow-sm border border-slate-800 space-y-5">
+            <div>
+              <span className="text-[10px] font-bold uppercase tracking-wider text-indigo-300">Estimated Max Loan Eligible</span>
+              <h3 className="text-4xl font-extrabold font-display mt-0.5 flex items-baseline gap-1">
+                {formatCurrency(result.maxLoanAmount)}
+              </h3>
+              <p className="text-[11px] text-indigo-200 mt-1 leading-normal">
+                Calculated at {interestRate}% interest rate over a tenure of {tenureYears} years.
+              </p>
+            </div>
+
+            <div className="grid grid-cols-2 gap-4 border-t border-indigo-800/50 pt-4">
+              <div>
+                <span className="text-[10px] font-medium text-indigo-300 uppercase">Max EMI Capacity</span>
+                <p className="text-base font-bold mt-0.5 text-emerald-400">{formatCurrency(result.maxEmiCapacity)}</p>
+              </div>
+              <div>
+                <span className="text-[10px] font-medium text-indigo-300 uppercase">Disposable Limit (FOIR)</span>
+                <p className="text-base font-bold mt-0.5">{formatCurrency((monthlyIncome * foir) / 100)}</p>
+              </div>
+            </div>
+
+            <div className="grid grid-cols-2 gap-4">
+              <div>
+                <span className="text-[10px] font-medium text-indigo-300 uppercase">Debt-to-Income (DTI)</span>
+                <p className="text-base font-bold mt-0.5">{result.debtToIncomeRatio.toFixed(1)}%</p>
+              </div>
+              <div>
+                <span className="text-[10px] font-medium text-indigo-300 uppercase">Profile Status</span>
+                <p className="text-base font-bold mt-0.5 text-indigo-300">{result.status}</p>
+              </div>
+            </div>
+          </div>
+
+          {/* Credit Profile Status Card */}
+          <div className="bg-white border border-slate-200 p-6 rounded-2xl shadow-sm space-y-4">
             <div className={`p-4 rounded-xl border flex gap-3 items-center ${getStatusColor(result.status)}`}>
               {result.status === 'Excellent' || result.status === 'Good' ? (
                 <CheckCircle className="shrink-0 text-emerald-600" size={18} />
@@ -255,43 +291,6 @@ export default function LoanEligibilityCalculator() {
                 </p>
               </div>
             </div>
-
-            {/* Calculations outputs */}
-            <div className="space-y-4">
-              <div className="border-b border-slate-100 pb-3 flex justify-between items-center text-xs">
-                <span className="text-slate-500">Monthly Disposable Limit (FOIR cap)</span>
-                <span className="font-semibold text-slate-800">
-                  {formatCurrency((monthlyIncome * foir) / 100)}
-                </span>
-              </div>
-
-              <div className="border-b border-slate-100 pb-3 flex justify-between items-center text-xs">
-                <span className="text-slate-500">Maximum Eligible EMI Capacity</span>
-                <span className="font-bold text-indigo-600 text-sm">
-                  {formatCurrency(result.maxEmiCapacity)}
-                </span>
-              </div>
-
-              <div className="border-b border-slate-100 pb-3 flex justify-between items-center text-xs">
-                <span className="text-slate-500">Proposed Debt-to-Income (DTI) Ratio</span>
-                <span className="font-semibold text-slate-800">
-                  {result.debtToIncomeRatio.toFixed(1)}%
-                </span>
-              </div>
-            </div>
-          </div>
-
-          {/* Massive Display card for Max Loan Amount */}
-          <div className="bg-gradient-to-tr from-indigo-500 to-indigo-700 p-6 rounded-2xl text-white text-center shadow-md shadow-indigo-500/10">
-            <span className="text-xs uppercase font-bold tracking-widest text-indigo-200 block">
-              Estimated Max Loan Eligible
-            </span>
-            <span className="text-3xl font-extrabold block mt-2 font-display">
-              {formatCurrency(result.maxLoanAmount)}
-            </span>
-            <p className="text-xs text-indigo-100/70 mt-3 flex items-center justify-center gap-1.5">
-              <Info size={12} /> Calculated at {interestRate}% p.a. for {tenureYears} Years
-            </p>
           </div>
         </div>
       </div>

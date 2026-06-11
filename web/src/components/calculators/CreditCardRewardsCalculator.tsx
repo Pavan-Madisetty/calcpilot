@@ -222,71 +222,47 @@ export default function CreditCardRewardsCalculator() {
         </div>
 
         {/* Right Outputs */}
-        <div className="lg:col-span-5 bg-white border border-slate-200 p-6 rounded-2xl shadow-sm flex flex-col justify-between space-y-6">
-          <div className="space-y-6">
-            <div className="flex items-center gap-3">
-              <div className="h-10 w-10 bg-indigo-50 text-indigo-600 flex items-center justify-center rounded-xl">
-                <CreditCard size={20} />
+        <div className="lg:col-span-5 space-y-6">
+          {/* Main Card Yield Result Card */}
+          <div className="bg-gradient-to-tr from-indigo-900 to-slate-900 text-white p-6 rounded-2xl shadow-sm border border-slate-800 space-y-5">
+            <div>
+              <span className="text-[10px] font-bold uppercase tracking-wider text-indigo-300">Effective Net Return Yield</span>
+              <h3 className="text-4xl font-extrabold font-display mt-0.5 flex items-baseline gap-1">
+                {result.effectiveReturnPercent.toFixed(2)}%
+              </h3>
+              <p className="text-[11px] text-indigo-200 mt-1 leading-normal">
+                Yielded on total monthly spends of {formatCurrency(totalSpend)} under <strong className="text-white">{result.cardName}</strong>.
+              </p>
+            </div>
+
+            <div className="grid grid-cols-2 gap-4 border-t border-indigo-800/50 pt-4">
+              <div>
+                <span className="text-[10px] font-medium text-indigo-300 uppercase">Return Value Return</span>
+                <p className="text-base font-bold mt-0.5 text-emerald-400">{formatCurrency(result.effectiveReturnAmount)}</p>
               </div>
               <div>
-                <span className="text-xs text-slate-400 block">Selected Card</span>
-                <span className="font-bold text-slate-800">{result.cardName}</span>
+                <span className="text-[10px] font-medium text-indigo-300 uppercase">Points Earned</span>
+                <p className="text-base font-bold mt-0.5">{result.rewardPointsEarned} RP</p>
               </div>
             </div>
 
-            {/* Main Value Metrics */}
-            <div className="grid grid-cols-1 gap-3.5">
-              <div className="p-4 rounded-xl border border-slate-200 bg-slate-50/50">
-                <span className="text-[10px] uppercase font-bold text-slate-500 block tracking-wider">
-                  Reward Points Earned
-                </span>
-                <span className="text-lg font-bold block mt-1 text-slate-800">
-                  {result.rewardPointsEarned} RP
-                </span>
+            <div className="grid grid-cols-2 gap-4">
+              <div>
+                <span className="text-[10px] font-medium text-indigo-300 uppercase">Airline Partners Miles</span>
+                <p className="text-base font-bold mt-0.5 text-indigo-300">{result.airlineMiles.toLocaleString()} Miles</p>
               </div>
-
-              <div className="p-4 rounded-xl border border-emerald-100 bg-emerald-50">
-                <span className="text-[10px] uppercase font-bold text-emerald-600 block tracking-wider">
-                  Effective Value Return
-                </span>
-                <span className="text-lg font-bold block mt-1 text-emerald-600">
-                  {formatCurrency(result.effectiveReturnAmount)}
-                </span>
+              <div>
+                <span className="text-[10px] font-medium text-indigo-300 uppercase">Hotel Partners Points</span>
+                <p className="text-base font-bold mt-0.5 text-indigo-300">{result.hotelPoints.toLocaleString()} Pts</p>
               </div>
-
-              <div className="p-4 rounded-xl border border-indigo-100 bg-indigo-50">
-                <span className="text-[10px] uppercase font-bold text-indigo-600 block tracking-wider">
-                  Airline Partners Miles
-                </span>
-                <span className="text-sm font-bold block mt-1 text-indigo-600">
-                  {result.airlineMiles.toLocaleString()} Miles
-                </span>
-              </div>
-
-              <div className="p-4 rounded-xl border border-indigo-100 bg-indigo-50">
-                <span className="text-[10px] uppercase font-bold text-indigo-600 block tracking-wider">
-                  Hotel Partners Points
-                </span>
-                <span className="text-sm font-bold block mt-1 text-indigo-600">
-                  {result.hotelPoints.toLocaleString()} Points
-                </span>
-              </div>
-            </div>
-
-            {/* Performance display */}
-            <div className="p-4 rounded-xl border border-dashed border-indigo-200 text-center">
-              <span className="text-xs text-slate-400 block">Effective Net Return Percentage</span>
-              <span className="text-2xl font-extrabold text-slate-800 mt-1 block font-display">
-                {result.effectiveReturnPercent.toFixed(2)}%
-              </span>
-              <p className="text-[9px] text-slate-400 mt-1.5">
-                Yielded on total monthly spends of {formatCurrency(totalSpend)}
-              </p>
             </div>
           </div>
 
-          <div className="text-[9px] text-slate-400 bg-slate-50 p-3 rounded-lg border border-slate-100">
-            SmartBuy spends capped by card rules. Point transfers to airline/hotel loyalty programs (Vistara, Marriott Bonvoy, Singapore KrisFlyer) subject to partner ratio updates.
+          {/* Details Card */}
+          <div className="bg-white border border-slate-200 p-6 rounded-2xl shadow-sm space-y-4">
+            <div className="text-[10px] text-slate-400 bg-slate-50/50 p-4 rounded-xl border border-slate-100/50 leading-relaxed">
+              SmartBuy spends capped by card rules. Point transfers to airline/hotel loyalty programs (Vistara, Marriott Bonvoy, Singapore KrisFlyer) subject to partner ratio updates.
+            </div>
           </div>
         </div>
       </div>

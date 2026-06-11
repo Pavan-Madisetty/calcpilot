@@ -150,51 +150,41 @@ export default function ConstructionCostCalculator() {
         </div>
 
         {/* Right Outputs */}
-        <div className="lg:col-span-6 bg-white border border-slate-200 p-6 rounded-2xl shadow-sm flex flex-col justify-between space-y-6">
-          <div className="space-y-4">
-            <div className="text-center bg-slate-50 p-4 rounded-xl border border-slate-200">
-              <span className="text-[10px] uppercase font-bold text-slate-400 block tracking-wider">
-                Total Estimated Cost
-              </span>
-              <span className="text-2xl font-extrabold block mt-1 text-slate-800">
+        <div className="lg:col-span-6 space-y-6">
+          {/* Main Construction Cost result card */}
+          <div className="bg-gradient-to-tr from-indigo-900 to-slate-900 text-white p-6 rounded-2xl shadow-sm border border-slate-800 space-y-5">
+            <div>
+              <span className="text-[10px] font-bold uppercase tracking-wider text-indigo-300">Total Estimated Cost</span>
+              <h3 className="text-4xl font-extrabold font-display mt-0.5 flex items-baseline gap-1">
                 {formatCurrency(result.totalCost)}
-              </span>
-              <span className="text-[10px] text-slate-400 mt-1.5 block">
-                Total Area: {builtUpArea * floors} sq. ft. @ {formatCurrency(result.ratePerSqFt)}/sq.ft.
-              </span>
+              </h3>
+              <p className="text-[11px] text-indigo-200 mt-1 leading-normal">
+                Total Built-up Area: {builtUpArea * floors} sq. ft. @ {formatCurrency(result.ratePerSqFt)}/sq.ft.
+              </p>
             </div>
 
-            <div className="grid grid-cols-1 gap-3 text-center">
-              <div className="bg-indigo-50 p-3 rounded-xl border border-indigo-100">
-                <span className="text-[9px] uppercase font-bold text-indigo-600 block">
-                  Materials Budget (58%)
-                </span>
-                <span className="text-xs font-bold mt-1 block">
-                  {formatCurrency(result.materialCost)}
-                </span>
+            <div className="grid grid-cols-2 gap-4 border-t border-indigo-800/50 pt-4">
+              <div>
+                <span className="text-[10px] font-medium text-indigo-300 uppercase">Materials (58%)</span>
+                <p className="text-base font-bold mt-0.5 text-emerald-400">{formatCurrency(result.materialCost)}</p>
               </div>
-              <div className="bg-emerald-50 p-3 rounded-xl border border-emerald-100">
-                <span className="text-[9px] uppercase font-bold text-emerald-600 block">
-                  Labor Budget (25%)
-                </span>
-                <span className="text-xs font-bold mt-1 block">
-                  {formatCurrency(result.laborCost)}
-                </span>
+              <div>
+                <span className="text-[10px] font-medium text-indigo-300 uppercase">Labor (25%)</span>
+                <p className="text-base font-bold mt-0.5 text-rose-400">{formatCurrency(result.laborCost)}</p>
               </div>
-              <div className="bg-slate-50 p-3 rounded-xl border border-slate-200">
-                <span className="text-[9px] uppercase font-bold text-slate-500 block">
-                  Fittings &amp; Finish (17%)
-                </span>
-                <span className="text-xs font-bold mt-1 block">
-                  {formatCurrency(result.fittingsCost)}
-                </span>
+            </div>
+
+            <div className="grid grid-cols-1 border-t border-indigo-800/20 pt-4">
+              <div>
+                <span className="text-[10px] font-medium text-indigo-300 uppercase">Fittings & finishing (17%)</span>
+                <p className="text-base font-bold mt-0.5">{formatCurrency(result.fittingsCost)}</p>
               </div>
             </div>
           </div>
 
           {/* Breakdown Items List */}
-          <div className="space-y-2">
-            <span className="text-xs font-bold uppercase tracking-wider text-slate-400 block mb-2">
+          <div className="bg-white border border-slate-200 p-6 rounded-2xl shadow-sm">
+            <span className="text-xs font-black uppercase tracking-wider text-slate-400 block mb-4">
               Material &amp; Labor Distribution
             </span>
             <div className="divide-y divide-slate-100 max-h-52 overflow-y-auto pr-2">

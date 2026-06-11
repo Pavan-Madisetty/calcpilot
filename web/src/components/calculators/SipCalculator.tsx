@@ -157,79 +157,84 @@ export default function SipCalculator() {
         </div>
 
         {/* Right Side: Projections & Summary */}
-        <div className="lg:col-span-6 bg-white border border-slate-200 p-6 rounded-2xl shadow-sm flex flex-col justify-between space-y-6">
-          {/* Numbers */}
-          <div className="grid grid-cols-1 gap-3">
-            <div className="bg-slate-50 p-3 rounded-xl border border-slate-100">
-              <span className="text-[10px] uppercase font-bold text-slate-500 block tracking-wider">
-                Invested Amount
-              </span>
-              <span className="text-sm font-bold block mt-1 text-slate-800">
-                {formatCurrency(result.totalInvestment)}
-              </span>
-            </div>
-
-            <div className="bg-emerald-50 p-3 rounded-xl border border-emerald-100">
-              <span className="text-[10px] uppercase font-bold text-emerald-600 block tracking-wider">
-                Wealth Gained
-              </span>
-              <span className="text-sm font-bold block mt-1 text-emerald-600">
-                {formatCurrency(result.wealthGained)}
-              </span>
-            </div>
-
-            <div className="bg-indigo-50 p-3 rounded-xl border border-indigo-100">
-              <span className="text-[10px] uppercase font-bold text-indigo-600 block tracking-wider">
-                Expected Future Value
-              </span>
-              <span className="text-sm font-bold block mt-1 text-indigo-600">
+        <div className="lg:col-span-6 space-y-6">
+          {/* Main SIP Future Value result card */}
+          <div className="bg-gradient-to-tr from-indigo-900 to-slate-900 text-white p-6 rounded-2xl shadow-sm border border-slate-800 space-y-5">
+            <div>
+              <span className="text-[10px] font-bold uppercase tracking-wider text-indigo-300">Expected Future Value</span>
+              <h3 className="text-4xl font-extrabold font-display mt-0.5 flex items-baseline gap-1">
                 {formatCurrency(result.futureValue)}
-              </span>
+              </h3>
+            </div>
+
+            <div className="grid grid-cols-2 gap-4 border-t border-indigo-800/50 pt-4">
+              <div>
+                <span className="text-[10px] font-medium text-indigo-300 uppercase">Wealth Gained</span>
+                <p className="text-base font-bold mt-0.5 text-emerald-400">{formatCurrency(result.wealthGained)}</p>
+              </div>
+              <div>
+                <span className="text-[10px] font-medium text-indigo-300 uppercase">Invested Amount</span>
+                <p className="text-base font-bold mt-0.5">{formatCurrency(result.totalInvestment)}</p>
+              </div>
+            </div>
+
+            <div className="grid grid-cols-2 gap-4">
+              <div>
+                <span className="text-[10px] font-medium text-indigo-300 uppercase">Monthly SIP</span>
+                <p className="text-base font-bold mt-0.5">{formatCurrency(monthlyInvestment)}</p>
+              </div>
+              <div>
+                <span className="text-[10px] font-medium text-indigo-300 uppercase">Return Rate (p.a.)</span>
+                <p className="text-base font-bold mt-0.5 text-indigo-300">{expectedReturnAnnual}%</p>
+              </div>
             </div>
           </div>
 
           {/* Area Chart Growth */}
-          <div className="h-56 w-full">
-            <ResponsiveContainer width="100%" height="100%">
-              <AreaChart data={chartData} margin={{ top: 10, right: 10, left: -20, bottom: 0 }}>
-                <defs>
-                  <linearGradient id="colorInvested" x1="0" y1="0" x2="0" y2="1">
-                    <stop offset="5%" stopColor="#94a3b8" stopOpacity={0.4} />
-                    <stop offset="95%" stopColor="#94a3b8" stopOpacity={0.0} />
-                  </linearGradient>
-                  <linearGradient id="colorWealth" x1="0" y1="0" x2="0" y2="1">
-                    <stop offset="5%" stopColor="#4f46e5" stopOpacity={0.6} />
-                    <stop offset="95%" stopColor="#4f46e5" stopOpacity={0.0} />
-                  </linearGradient>
-                </defs>
-                <CartesianGrid strokeDasharray="3 3" vertical={false} stroke="#33415510" />
-                <XAxis dataKey="year" stroke="#94a3b8" fontSize={10} tickLine={false} />
-                <YAxis
-                  stroke="#94a3b8"
-                  fontSize={10}
-                  tickLine={false}
-                  tickFormatter={(val) => `₹${(val / 100000).toFixed(0)}L`}
-                />
-                <Tooltip formatter={(value) => formatCurrency(Number(value))} />
-                <Legend iconType="circle" wrapperStyle={{ fontSize: 11 }} />
-                <Area
-                  type="monotone"
-                  dataKey="Invested Amount"
-                  stackId="1"
-                  stroke="#94a3b8"
-                  fillOpacity={1}
-                  fill="url(#colorInvested)"
-                />
-                <Area
-                  type="monotone"
-                  dataKey="Wealth Gained"
-                  stackId="2"
-                  stroke="#4f46e5"
-                  fillOpacity={1}
-                  fill="url(#colorWealth)"
-                />
-              </AreaChart>
-            </ResponsiveContainer>
+          <div className="bg-white border border-slate-200 p-6 rounded-2xl shadow-sm">
+            <h4 className="text-xs font-black uppercase text-slate-400 tracking-wider mb-4">Growth Projections</h4>
+            <div className="h-56 w-full">
+              <ResponsiveContainer width="100%" height="100%">
+                <AreaChart data={chartData} margin={{ top: 10, right: 10, left: -20, bottom: 0 }}>
+                  <defs>
+                    <linearGradient id="colorInvested" x1="0" y1="0" x2="0" y2="1">
+                      <stop offset="5%" stopColor="#94a3b8" stopOpacity={0.4} />
+                      <stop offset="95%" stopColor="#94a3b8" stopOpacity={0.0} />
+                    </linearGradient>
+                    <linearGradient id="colorWealth" x1="0" y1="0" x2="0" y2="1">
+                      <stop offset="5%" stopColor="#4f46e5" stopOpacity={0.6} />
+                      <stop offset="95%" stopColor="#4f46e5" stopOpacity={0.0} />
+                    </linearGradient>
+                  </defs>
+                  <CartesianGrid strokeDasharray="3 3" vertical={false} stroke="#33415510" />
+                  <XAxis dataKey="year" stroke="#94a3b8" fontSize={10} tickLine={false} />
+                  <YAxis
+                    stroke="#94a3b8"
+                    fontSize={10}
+                    tickLine={false}
+                    tickFormatter={(val) => `₹${(val / 100000).toFixed(0)}L`}
+                  />
+                  <Tooltip formatter={(value) => formatCurrency(Number(value))} />
+                  <Legend iconType="circle" wrapperStyle={{ fontSize: 11 }} />
+                  <Area
+                    type="monotone"
+                    dataKey="Invested Amount"
+                    stackId="1"
+                    stroke="#94a3b8"
+                    fillOpacity={1}
+                    fill="url(#colorInvested)"
+                  />
+                  <Area
+                    type="monotone"
+                    dataKey="Wealth Gained"
+                    stackId="2"
+                    stroke="#4f46e5"
+                    fillOpacity={1}
+                    fill="url(#colorWealth)"
+                  />
+                </AreaChart>
+              </ResponsiveContainer>
+            </div>
           </div>
         </div>
       </div>

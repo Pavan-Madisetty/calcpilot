@@ -195,70 +195,66 @@ export default function EmiCalculator() {
         </div>
 
         {/* Right Side: Charts & Summaries */}
-        <div className="lg:col-span-5 bg-white border border-slate-200 p-6 rounded-2xl shadow-sm flex flex-col justify-between space-y-6">
-          {/* Core Numbers */}
-          <div className="grid grid-cols-1 gap-3.5">
-            <div className="bg-indigo-50 p-4 rounded-xl border border-indigo-100">
-              <span className="text-[10px] uppercase font-bold text-indigo-600 block tracking-wider">
-                Monthly EMI
-              </span>
-              <span className="text-xl font-bold block mt-1 text-slate-800">
+        <div className="lg:col-span-5 space-y-6">
+          {/* Main EMI result card */}
+          <div className="bg-gradient-to-tr from-indigo-900 to-slate-900 text-white p-6 rounded-2xl shadow-sm border border-slate-800 space-y-5">
+            <div>
+              <span className="text-[10px] font-bold uppercase tracking-wider text-indigo-300">Monthly EMI</span>
+              <h3 className="text-4xl font-extrabold font-display mt-0.5 flex items-baseline gap-1">
                 {formatCurrency(result.monthlyEmi)}
-              </span>
+              </h3>
             </div>
 
-            <div className="bg-emerald-50 p-4 rounded-xl border border-emerald-100">
-              <span className="text-[10px] uppercase font-bold text-emerald-600 block tracking-wider">
-                Total Interest
-              </span>
-              <span className="text-xl font-bold block mt-1 text-slate-800">
-                {formatCurrency(result.totalInterest)}
-              </span>
+            <div className="grid grid-cols-2 gap-4 border-t border-indigo-800/50 pt-4">
+              <div>
+                <span className="text-[10px] font-medium text-indigo-300 uppercase">Total Interest</span>
+                <p className="text-base font-bold mt-0.5 text-rose-400">{formatCurrency(result.totalInterest)}</p>
+              </div>
+              <div>
+                <span className="text-[10px] font-medium text-indigo-300 uppercase">Total Payment</span>
+                <p className="text-base font-bold mt-0.5">{formatCurrency(result.totalPayment)}</p>
+              </div>
             </div>
 
-            <div className="bg-slate-50 p-4 rounded-xl border border-slate-100">
-              <span className="text-[10px] uppercase font-bold text-slate-500 block tracking-wider">
-                Total Payment
-              </span>
-              <span className="text-sm font-bold block mt-1 text-slate-800">
-                {formatCurrency(result.totalPayment)}
-              </span>
-            </div>
-
-            <div className="bg-slate-50 p-4 rounded-xl border border-slate-100">
-              <span className="text-[10px] uppercase font-bold text-slate-500 block tracking-wider">
-                Processing Fee
-              </span>
-              <span className="text-sm font-bold block mt-1 text-slate-800">
-                {formatCurrency(result.processingFeeAmount)}
-              </span>
+            <div className="grid grid-cols-2 gap-4">
+              <div>
+                <span className="text-[10px] font-medium text-indigo-300 uppercase">Principal Loan</span>
+                <p className="text-base font-bold mt-0.5">{formatCurrency(loanAmount)}</p>
+              </div>
+              <div>
+                <span className="text-[10px] font-medium text-indigo-300 uppercase">Processing Fee</span>
+                <p className="text-base font-bold mt-0.5 text-emerald-400">{formatCurrency(result.processingFeeAmount)}</p>
+              </div>
             </div>
           </div>
 
           {/* Chart Graphic */}
-          <div className="h-44 w-full flex items-center justify-center relative">
-            <ResponsiveContainer width="100%" height="100%">
-              <PieChart>
-                <Pie
-                  data={chartData}
-                  cx="50%"
-                  cy="50%"
-                  innerRadius={50}
-                  outerRadius={70}
-                  paddingAngle={3}
-                  dataKey="value"
-                >
-                  {chartData.map((entry, index) => (
-                    <Cell key={`cell-${index}`} fill={COLORS[index % COLORS.length]} />
-                  ))}
-                </Pie>
-                <Tooltip formatter={(value) => formatCurrency(Number(value))} />
-                <Legend iconType="circle" wrapperStyle={{ fontSize: 11 }} />
-              </PieChart>
-            </ResponsiveContainer>
-            <div className="absolute flex flex-col items-center">
-              <span className="text-[9px] uppercase text-slate-400 font-bold">Total Payment</span>
-              <span className="text-xs font-bold text-slate-700">{formatCurrency(result.totalPayment)}</span>
+          <div className="bg-white border border-slate-200 p-6 rounded-2xl shadow-sm">
+            <h4 className="text-xs font-black uppercase text-slate-400 tracking-wider mb-4">Payment Breakdown</h4>
+            <div className="h-44 w-full flex items-center justify-center relative">
+              <ResponsiveContainer width="100%" height="100%">
+                <PieChart>
+                  <Pie
+                    data={chartData}
+                    cx="50%"
+                    cy="50%"
+                    innerRadius={50}
+                    outerRadius={70}
+                    paddingAngle={3}
+                    dataKey="value"
+                  >
+                    {chartData.map((entry, index) => (
+                      <Cell key={`cell-${index}`} fill={COLORS[index % COLORS.length]} />
+                    ))}
+                  </Pie>
+                  <Tooltip formatter={(value) => formatCurrency(Number(value))} />
+                  <Legend iconType="circle" wrapperStyle={{ fontSize: 11 }} />
+                </PieChart>
+              </ResponsiveContainer>
+              <div className="absolute flex flex-col items-center">
+                <span className="text-[9px] uppercase text-slate-400 font-bold">Total Payment</span>
+                <span className="text-xs font-bold text-slate-700">{formatCurrency(result.totalPayment)}</span>
+              </div>
             </div>
           </div>
         </div>

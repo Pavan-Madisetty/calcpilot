@@ -131,76 +131,41 @@ export default function TileCalculator() {
         </div>
 
         {/* Right Outputs */}
-        <div className="lg:col-span-5 bg-white border border-slate-200 p-6 rounded-2xl shadow-sm flex flex-col justify-between space-y-6">
-          <div className="space-y-6">
-            <div className="flex items-center gap-3">
-              <div className="h-10 w-10 bg-indigo-50 text-indigo-600 flex items-center justify-center rounded-xl">
-                <Grid size={20} />
+        <div className="lg:col-span-5 space-y-6">
+          {/* Main Tiles Purchase Recommendation result card */}
+          <div className="bg-gradient-to-tr from-indigo-900 to-slate-900 text-white p-6 rounded-2xl shadow-sm border border-slate-800 space-y-5">
+            <div>
+              <span className="text-[10px] font-bold uppercase tracking-wider text-indigo-300">Purchase Recommendation</span>
+              <h3 className="text-4xl font-extrabold font-display mt-0.5 flex items-baseline gap-1">
+                {result.totalTilesRounded}
+                <span className="text-xs font-medium text-indigo-200">Tiles</span>
+              </h3>
+              <p className="text-[11px] text-indigo-200 mt-1 leading-normal">
+                Includes {wastage}% cutting/breakage wastage buffer ({Math.ceil(result.wastageTilesCount)} Tiles).
+              </p>
+            </div>
+
+            <div className="grid grid-cols-2 gap-4 border-t border-indigo-800/50 pt-4">
+              <div>
+                <span className="text-[10px] font-medium text-indigo-300 uppercase">Total Material Cost</span>
+                <p className="text-base font-bold mt-0.5 text-emerald-400">{formatCurrency(result.totalCost)}</p>
               </div>
               <div>
-                <span className="text-xs text-slate-400 block">Tile Calculations</span>
-                <span className="font-bold text-slate-800">Floor Layout Estimates</span>
+                <span className="text-[10px] font-medium text-indigo-300 uppercase">Base Tiles Needed</span>
+                <p className="text-base font-bold mt-0.5">{Math.ceil(result.baseTilesNeeded)} Tiles</p>
               </div>
             </div>
 
-            {/* Calculations Grid */}
-            <div className="grid grid-cols-1 gap-3.5">
-              <div className="p-4 rounded-xl border border-slate-200 bg-slate-50/50">
-                <span className="text-[10px] uppercase font-bold text-slate-500 block tracking-wider">
-                  Total Room Area
-                </span>
-                <span className="text-lg font-bold block mt-1 text-slate-800">
-                  {result.roomAreaSqFt} sq. ft.
-                </span>
+            <div className="grid grid-cols-2 gap-4">
+              <div>
+                <span className="text-[10px] font-medium text-indigo-300 uppercase">Total Room Area</span>
+                <p className="text-base font-bold mt-0.5 text-indigo-300">{result.roomAreaSqFt} sq.ft.</p>
               </div>
-
-              <div className="p-4 rounded-xl border border-slate-200 bg-slate-50/50">
-                <span className="text-[10px] uppercase font-bold text-slate-500 block tracking-wider">
-                  Single Tile Area
-                </span>
-                <span className="text-lg font-bold block mt-1 text-slate-800">
-                  {result.tileAreaSqFt.toFixed(2)} sq. ft.
-                </span>
-              </div>
-
-              <div className="p-4 rounded-xl border border-slate-200 bg-slate-50/50">
-                <span className="text-[10px] uppercase font-bold text-slate-500 block tracking-wider">
-                  Base Tiles Needed
-                </span>
-                <span className="text-sm font-bold block mt-1 text-slate-700">
-                  {Math.ceil(result.baseTilesNeeded)} Tiles
-                </span>
-              </div>
-
-              <div className="p-4 rounded-xl border border-amber-100 bg-amber-50">
-                <span className="text-[10px] uppercase font-bold text-amber-600 block tracking-wider">
-                  Wastage Buffer
-                </span>
-                <span className="text-sm font-bold block mt-1 text-amber-600">
-                  {Math.ceil(result.wastageTilesCount)} Tiles ({wastage}%)
-                </span>
+              <div>
+                <span className="text-[10px] font-medium text-indigo-300 uppercase">Single Tile Area</span>
+                <p className="text-base font-bold mt-0.5 text-indigo-300">{result.tileAreaSqFt.toFixed(2)} sq.ft.</p>
               </div>
             </div>
-
-            {/* Cost displays */}
-            <div className="p-4 rounded-xl border border-emerald-100 bg-emerald-50 text-center">
-              <span className="text-xs text-emerald-600 block font-semibold">Total Tile Material Cost</span>
-              <span className="text-2xl font-extrabold text-emerald-600 mt-1 block">
-                {formatCurrency(result.totalCost)}
-              </span>
-            </div>
-          </div>
-
-          <div className="p-4 bg-indigo-50 text-center rounded-xl border border-indigo-100">
-            <span className="text-xs uppercase font-bold tracking-wider text-indigo-600 block">
-              Purchase Recommendation
-            </span>
-            <span className="text-xl font-extrabold block text-slate-800 mt-1 font-display">
-              Buy {result.totalTilesRounded} Tiles
-            </span>
-            <span className="text-[10px] text-slate-400 mt-1 block">
-              Includes {wastage}% cutting/breakage wastage buffer.
-            </span>
           </div>
         </div>
       </div>

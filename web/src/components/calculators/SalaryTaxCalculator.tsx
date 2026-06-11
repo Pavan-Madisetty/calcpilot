@@ -199,15 +199,56 @@ export default function SalaryTaxCalculator() {
         </div>
 
         {/* Right Side: Comparison & Savings */}
-        <div className="lg:col-span-6 bg-white border border-slate-200 rounded-2xl shadow-sm overflow-hidden flex flex-col justify-between">
-          <div>
+        <div className="lg:col-span-6 space-y-6">
+          {/* Main Tax Saving result card */}
+          <div className="bg-gradient-to-tr from-indigo-900 to-slate-900 text-white p-6 rounded-2xl shadow-sm border border-slate-800 space-y-5">
+            <div>
+              <span className="text-[10px] font-bold uppercase tracking-wider text-indigo-300">
+                Recommended: {result.recommendedRegime === 'Equal' ? 'Any Regime' : `${result.recommendedRegime} Regime`}
+              </span>
+              <h3 className="text-4xl font-extrabold font-display mt-0.5 flex items-baseline gap-1">
+                {formatCurrency(result.recommendedRegime === 'Old' ? result.oldRegime.totalTax : result.newRegime.totalTax)}
+                <span className="text-xs font-medium text-indigo-200">/year tax</span>
+              </h3>
+              {result.recommendedRegime !== 'Equal' && (
+                <p className="text-[11px] text-indigo-200 mt-1 leading-normal">
+                  Saves you <strong className="text-emerald-400">{formatCurrency(result.difference)}/year</strong> compared to the other regime.
+                </p>
+              )}
+            </div>
+
+            <div className="grid grid-cols-2 gap-4 border-t border-indigo-800/50 pt-4">
+              <div>
+                <span className="text-[10px] font-medium text-indigo-300 uppercase">New Regime Tax</span>
+                <p className="text-base font-bold mt-0.5">{formatCurrency(result.newRegime.totalTax)}</p>
+              </div>
+              <div>
+                <span className="text-[10px] font-medium text-indigo-300 uppercase">Old Regime Tax</span>
+                <p className="text-base font-bold mt-0.5">{formatCurrency(result.oldRegime.totalTax)}</p>
+              </div>
+            </div>
+
+            <div className="grid grid-cols-2 gap-4">
+              <div>
+                <span className="text-[10px] font-medium text-indigo-300 uppercase">New Taxable Income</span>
+                <p className="text-base font-bold mt-0.5 text-indigo-300">{formatCurrency(result.newRegime.taxableIncome)}</p>
+              </div>
+              <div>
+                <span className="text-[10px] font-medium text-indigo-300 uppercase">Old Taxable Income</span>
+                <p className="text-base font-bold mt-0.5 text-indigo-300">{formatCurrency(result.oldRegime.taxableIncome)}</p>
+              </div>
+            </div>
+          </div>
+
+          {/* Details & Savings Guide Tabs Card */}
+          <div className="bg-white border border-slate-200 rounded-2xl shadow-sm overflow-hidden">
             {/* View tabs */}
-            <div className="flex border-b border-slate-200">
+            <div className="flex border-b border-slate-200 bg-slate-50/50">
               <button
                 onClick={() => setTab('compare')}
                 className={`flex-1 py-3 font-semibold text-xs uppercase tracking-wider text-center border-b-2 transition cursor-pointer ${
                   tab === 'compare'
-                    ? 'border-indigo-600 text-indigo-600 bg-indigo-50/10'
+                    ? 'border-indigo-600 text-indigo-600 bg-white'
                     : 'border-transparent text-slate-500 hover:text-slate-700'
                 }`}
               >
@@ -217,7 +258,7 @@ export default function SalaryTaxCalculator() {
                 onClick={() => setTab('suggestions')}
                 className={`flex-1 py-3 font-semibold text-xs uppercase tracking-wider text-center border-b-2 transition cursor-pointer ${
                   tab === 'suggestions'
-                    ? 'border-indigo-600 text-indigo-600 bg-indigo-50/10'
+                    ? 'border-indigo-600 text-indigo-600 bg-white'
                     : 'border-transparent text-slate-500 hover:text-slate-700'
                 }`}
               >
@@ -227,56 +268,29 @@ export default function SalaryTaxCalculator() {
 
             <div className="p-6">
               {tab === 'compare' ? (
-                <div className="space-y-6">
-                  {/* Recommendation Card */}
-                  <div className="p-4 rounded-xl border border-indigo-200 bg-indigo-50/30 flex gap-3 items-center">
-                    <div className="h-10 w-10 bg-indigo-600 text-white rounded-xl flex items-center justify-center font-bold text-lg">
-                      💡
-                    </div>
-                    <div>
-                      <h4 className="font-bold text-sm text-slate-800">
-                        Recommended: {result.recommendedRegime === 'Equal' ? 'Any Regime' : `${result.recommendedRegime} Regime`}
-                      </h4>
-                      <p className="text-xs text-slate-500 mt-0.5 leading-relaxed">
-                        {result.recommendedRegime === 'Equal'
-                          ? 'Both regimes yield the exact same tax liability.'
-                          : `You will save ${formatCurrency(result.difference)} annually by opting for the ${
-                              result.recommendedRegime
-                            } Regime.`}
-                      </p>
-                    </div>
+                <div className="space-y-4 text-xs text-slate-600">
+                  <div className="flex justify-between py-2 border-b border-slate-100">
+                    <span>Standard Deduction</span>
+                    <span>₹75,000 (New) / ₹50,000 (Old)</span>
                   </div>
-
-                  {/* Regime Data Grid */}
-                  <div className="grid grid-cols-1 gap-3.5">
-                    {/* Old Regime Card */}
-                    <div className={`p-4 rounded-xl border transition ${result.recommendedRegime === 'Old' ? 'border-indigo-500 bg-indigo-50/10' : 'border-slate-200'}`}>
-                      <span className="text-[10px] uppercase font-bold text-slate-500 block tracking-wider">
-                        Old Tax Regime
-                      </span>
-                      <span className="text-xl font-bold block mt-1 text-slate-800">
-                        {formatCurrency(result.oldRegime.totalTax)}
-                      </span>
-                      <div className="text-[10px] text-slate-400 mt-2 space-y-1">
-                        <div>Deductions: {formatCurrency(result.oldRegime.deductions)}</div>
-                        <div>Taxable: {formatCurrency(result.oldRegime.taxableIncome)}</div>
-                      </div>
-                    </div>
-
-                    {/* New Regime Card */}
-                    <div className={`p-4 rounded-xl border transition ${result.recommendedRegime === 'New' ? 'border-indigo-500 bg-indigo-50/10' : 'border-slate-200'}`}>
-                      <span className="text-[10px] uppercase font-bold text-slate-500 block tracking-wider">
-                        New Tax Regime
-                      </span>
-                      <span className="text-xl font-bold block mt-1 text-slate-800">
-                        {formatCurrency(result.newRegime.totalTax)}
-                      </span>
-                      <div className="text-[10px] text-slate-400 mt-2 space-y-1">
-                        <div>Deductions: {formatCurrency(result.newRegime.deductions)}</div>
-                        <div>Taxable: {formatCurrency(result.newRegime.taxableIncome)}</div>
-                      </div>
-                    </div>
+                  <div className="flex justify-between py-2 border-b border-slate-100">
+                    <span>Section 80C Claimed</span>
+                    <span>{formatCurrency(sec80C)}</span>
                   </div>
+                  <div className="flex justify-between py-2 border-b border-slate-100">
+                    <span>Section 80D Claimed</span>
+                    <span>{formatCurrency(sec80D)}</span>
+                  </div>
+                  <div className="flex justify-between py-2 border-b border-slate-100">
+                    <span>HRA Exemption Claimed</span>
+                    <span>{formatCurrency(result.oldRegime.exemptions)}</span>
+                  </div>
+                  {homeLoanInterest > 0 && (
+                    <div className="flex justify-between py-2 border-b border-slate-100">
+                      <span>Home Loan Interest (24b)</span>
+                      <span>{formatCurrency(homeLoanInterest)}</span>
+                    </div>
+                  )}
                 </div>
               ) : (
                 <div className="space-y-4">
@@ -307,11 +321,11 @@ export default function SalaryTaxCalculator() {
                 </div>
               )}
             </div>
-          </div>
 
-          <div className="p-6 bg-slate-50 border-t border-slate-100 flex justify-between items-center text-[10px] text-slate-400">
-            <span>Standard deduction applied: ₹50k (Old), ₹75k (New)</span>
-            <span className="flex items-center gap-1"><AlertCircle size={10} /> FY 2025-26 rules</span>
+            <div className="p-4 bg-slate-50 border-t border-slate-100 flex justify-between items-center text-[10px] text-slate-400">
+              <span>Standard deduction applied: ₹50k (Old), ₹75k (New)</span>
+              <span className="flex items-center gap-1"><AlertCircle size={10} /> FY 2025-26 rules</span>
+            </div>
           </div>
         </div>
       </div>
