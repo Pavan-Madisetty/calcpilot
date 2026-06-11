@@ -934,3 +934,473 @@ export function calculateTiles({
     totalCost,
   };
 }
+
+// ==========================================
+// 8. NO COST EMI CALCULATOR
+// ==========================================
+
+export interface NoCostEmiInput {
+  productPrice: number;
+  downPayment: number;
+  processingFee: number;
+  discountOffered: number;
+  gstPercent?: number;
+  tenureMonths: number;
+  monthlyEmi: number;
+  includeProcessingFee: boolean;
+  includeGst: boolean;
+  includeForegoneDiscount: boolean;
+}
+
+export interface NoCostEmiAmortizationRow {
+  month: number;
+  emi: number;
+  principal: number;
+  interest: number;
+  gstOnInterest: number;
+  totalMonthlyPayment: number;
+  balance: number;
+}
+
+export interface NoCostEmiOutput {
+  totalEmiPaid: number;
+  totalAmountPaid: number;
+  effectiveInterestCost: number;
+  effectiveAnnualRate: number; // in %
+  hiddenCharges: number;
+  savingsOrLoss: number; // positive represents savings, negative is loss/extra cost
+  amortizationSchedule: NoCostEmiAmortizationRow[];
+}
+
+export function solveIrr(cashFlows: number[], guess = 0.1): number {
+  const maxIterations = 100;
+  const tolerance = 1e-6;
+  let r = guess;
+
+  for (let i = 0; i < maxIterations; i++) {
+    let npv = 0;
+    let dNpv = 0;
+    for (let t = 0; t < cashFlows.length; t++) {
+      const factor = Math.pow(1 + r, t);
+      npv += cashFlows[t] / factor;
+      dNpv -= (t * cashFlows[t]) / (factor * (1 + r));
+    }
+
+    if (Math.abs(dNpv) < 1e-12) break;
+    const nextR = r - npv / dNpv;
+    if (Math.abs(nextR - r) < tolerance) {
+      return nextR;
+    }
+    r = nextR;
+  }
+  return r;
+}
+
+export function calculateNoCostEmi(input: NoCostEmiInput): NoCostEmiOutput {
+  const {
+    productPrice,
+    downPayment,
+    processingFee,
+    discountOffered,
+    gstPercent = 18,
+    tenureMonths: N,
+    monthlyEmi: E,
+    includeProcessingFee,
+    includeGst,
+    includeForegoneDiscount,
+  } = input;
+
+  const gstRate = gstPercent / 100;
+
+  // 1. Solve for bank's internal interest rate r_bank based on net loan principal
+  // Net Loan Principal = Product Price - Upfront Discount - Down Payment
+  const netLoanPrincipal = Math.max(0, productPrice - discountOffered - downPayment);
+  
+  // Solve IRR for bank's cash flows: [netLoanPrincipal, -E, -E, ..., -E]
+  const bankCashFlows = [netLoanPrincipal];
+  for (let i = 0; i < N; i++) {
+    bankCashFlows.push(-E);
+  }
+  
+  let r_bank = 0;
+  if (E * N > netLoanPrincipal && netLoanPrincipal > 0) {
+    r_bank = solveIrr(bankCashFlows, 0.01);
+  }
+
+  // 2. Generate monthly amortization schedule
+  const amortizationSchedule: NoCostEmiAmortizationRow[] = [];
+  let remainingBalance = netLoanPrincipal;
+  
+  let totalEmiPaid = 0;
+  let totalInterestPaid = 0;
+  let totalGstOnInterest = 0;
+
+  for (let m = 1; m <= N; m++) {
+    const interest = remainingBalance * r_bank;
+    const gstOnInterest = interest * gstRate;
+    const principal = E - interest;
+    const totalMonthlyPayment = E + (includeGst ? gstOnInterest : 0);
+    
+    remainingBalance = Math.max(0, remainingBalance - principal);
+    
+    amortizationSchedule.push({
+      month: m,
+      emi: E,
+      principal,
+      interest,
+      gstOnInterest,
+      totalMonthlyPayment,
+      balance: remainingBalance,
+    });
+
+    totalEmiPaid += E;
+    totalInterestPaid += interest;
+    totalGstOnInterest += gstOnInterest;
+  }
+
+  // 3. Compute true initial cash outflow and outright purchase price
+  const initialOutflow = downPayment + 
+    (includeProcessingFee ? processingFee : 0) + 
+    ((includeProcessingFee && includeGst) ? (processingFee * gstRate) : 0);
+
+  const outrightPrice = includeForegoneDiscount ? (productPrice - discountOffered) : productPrice;
+
+  // Total amount paid under EMI: Initial Outflow + Sum of all monthly payments
+  let totalAmountPaid = initialOutflow;
+  const userCashFlows: number[] = [];
+  
+  // Month 0 outflow
+  userCashFlows.push(outrightPrice - initialOutflow);
+
+  for (let m = 1; m <= N; m++) {
+    const row = amortizationSchedule[m - 1];
+    totalAmountPaid += row.totalMonthlyPayment;
+    userCashFlows.push(-row.totalMonthlyPayment);
+  }
+
+  // 4. Calculate True IRR / EIR
+  let r_true = 0;
+  if (totalAmountPaid > outrightPrice) {
+    r_true = solveIrr(userCashFlows, 0.01);
+  }
+  const effectiveAnnualRate = (Math.pow(1 + r_true, 12) - 1) * 100;
+
+  // Hidden Cost = Total Amount Paid - Outright Price (it covers processing fee, GST, and foregone discounts)
+  const hiddenCharges = Math.max(0, totalAmountPaid - outrightPrice);
+  const savingsOrLoss = outrightPrice - totalAmountPaid;
+
+  return {
+    totalEmiPaid,
+    totalAmountPaid,
+    effectiveInterestCost: totalInterestPaid + (includeGst ? totalGstOnInterest : 0),
+    effectiveAnnualRate,
+    hiddenCharges,
+    savingsOrLoss,
+    amortizationSchedule,
+  };
+}
+
+// ==========================================
+// 9. HRA CALCULATOR
+// ==========================================
+
+export interface HraExemptionInput {
+  basicSalary: number;
+  hraReceived: number;
+  rentPaid: number;
+  isMetro: boolean;
+  isMonthly: boolean;
+}
+
+export interface HraExemptionOutput {
+  actualHra: number;
+  rentMinusTenBasic: number;
+  fiftyOrFortyBasic: number;
+  exemptedHra: number;
+  taxableHra: number;
+}
+
+export function calculateHraExemption(input: HraExemptionInput): HraExemptionOutput {
+  const mult = input.isMonthly ? 12 : 1;
+  const basic = input.basicSalary * mult;
+  const hra = input.hraReceived * mult;
+  const rent = input.rentPaid * mult;
+
+  const rule1 = hra;
+  const rule2 = Math.max(0, rent - 0.10 * basic);
+  const rule3 = input.isMetro ? 0.50 * basic : 0.40 * basic;
+
+  const exemptedHraAnnual = Math.min(rule1, rule2, rule3);
+  const taxableHraAnnual = Math.max(0, hra - exemptedHraAnnual);
+
+  const div = input.isMonthly ? 12 : 1;
+
+  return {
+    actualHra: rule1 / div,
+    rentMinusTenBasic: rule2 / div,
+    fiftyOrFortyBasic: rule3 / div,
+    exemptedHra: exemptedHraAnnual / div,
+    taxableHra: taxableHraAnnual / div,
+  };
+}
+
+// ==========================================
+// 10. IN-HAND SALARY CALCULATOR
+// ==========================================
+
+export interface SalaryInput {
+  annualCtc: number;
+  basicSalaryPercent: number;
+  hraPercent: number;
+  performanceBonus: number;
+  variablePay: number;
+  employerPfType: 'standard' | 'actual' | 'none';
+  employeePfType: 'standard' | 'actual' | 'none';
+  npsEmployee: number; // Section 80CCD(1B)
+  npsEmployer: number; // Section 80CCD(2)
+  professionalTax?: number;
+  otherDeductions: number;
+  rentPaid: number;
+  isMetro: boolean;
+  insurance80D: number;
+  homeLoanInterest: number;
+  other80C: number;
+}
+
+export interface SalaryRegimeBreakdown {
+  grossSalary: number;
+  standardDeduction: number;
+  pfEmployerDeduction: number;
+  pfEmployeeDeduction: number;
+  npsEmployeeDeduction: number;
+  npsEmployerDeduction: number;
+  hraExemption: number;
+  otherExemptions: number;
+  totalTaxableDeductions: number;
+  taxableIncome: number;
+  baseTax: number;
+  cess: number;
+  totalTax: number;
+  netAnnualSalary: number;
+  netMonthlySalary: number;
+}
+
+export interface SalaryOutput {
+  basicSalary: number;
+  hraReceived: number;
+  employerPf: number;
+  employeePf: number;
+  specialAllowance: number;
+  gratuity: number;
+  grossSalary: number;
+  oldRegime: SalaryRegimeBreakdown;
+  newRegime: SalaryRegimeBreakdown;
+}
+
+export function calculateSalaryStructure(input: SalaryInput): SalaryOutput {
+  const {
+    annualCtc,
+    basicSalaryPercent,
+    hraPercent,
+    performanceBonus,
+    variablePay,
+    employerPfType,
+    employeePfType,
+    npsEmployee,
+    npsEmployer,
+    professionalTax = 2500,
+    otherDeductions,
+    rentPaid,
+    isMetro,
+    insurance80D,
+    homeLoanInterest,
+    other80C,
+  } = input;
+
+  // 1. Calculate basic structural components
+  const baseSalaryPool = annualCtc - performanceBonus - variablePay;
+  const basicSalary = baseSalaryPool * (basicSalaryPercent / 100);
+  const hraReceived = basicSalary * (hraPercent / 100);
+  
+  // Employer PF
+  let employerPf = 0;
+  if (employerPfType === 'standard') {
+    employerPf = Math.min(21600, basicSalary * 0.12);
+  } else if (employerPfType === 'actual') {
+    employerPf = basicSalary * 0.12;
+  }
+
+  // Gratuity estimate (standard 4.81% of basic salary)
+  const gratuity = basicSalary * 0.0481;
+
+  // Special Allowance is the residual component of CTC
+  const specialAllowance = Math.max(0, annualCtc - basicSalary - hraReceived - employerPf - gratuity - performanceBonus - variablePay);
+
+  // Gross Salary is basic + hra + special allowance + bonus + variable
+  const grossSalary = basicSalary + hraReceived + specialAllowance + performanceBonus + variablePay;
+
+  // Employee PF
+  let employeePf = 0;
+  if (employeePfType === 'standard') {
+    employeePf = Math.min(21600, basicSalary * 0.12);
+  } else if (employeePfType === 'actual') {
+    employeePf = basicSalary * 0.12;
+  }
+
+  // NPS Employer Limit
+  const maxNpsEmployer = basicSalary * 0.10;
+  const actualNpsEmployer = Math.min(maxNpsEmployer, npsEmployer);
+
+  // 2. HRA Exemption (for Old Regime)
+  let hraExemption = 0;
+  if (rentPaid > 0) {
+    const annualRent = rentPaid * 12;
+    const rule1 = hraReceived;
+    const rule2 = Math.max(0, annualRent - 0.10 * basicSalary);
+    const rule3 = isMetro ? 0.50 * basicSalary : 0.40 * basicSalary;
+    hraExemption = Math.min(rule1, rule2, rule3);
+  }
+
+  // 3. Old Regime Taxable deductions & calculations
+  const oldRegime = (() => {
+    const standardDeduction = 50000;
+    
+    // 80C includes employee PF + other 80C, capped at 1.5 Lakhs
+    const total80C = Math.min(150000, employeePf + other80C);
+    
+    // 80D capped at 25,000 for self (extendable but standard 25k is safe limit)
+    const total80D = Math.min(25000, insurance80D);
+    
+    // NPS employee capped at 50,000 under 80CCD(1B)
+    const actualNpsEmployee = Math.min(50000, npsEmployee);
+
+    // Home Loan Interest under Section 24(b) capped at 2 Lakhs
+    const actualHomeLoanInterest = Math.min(200000, homeLoanInterest);
+
+    // Deductions allowed: Standard (50k) + HRA Exemption + 80C + 80D + NPS Employee + NPS Employer + Home Loan + PT
+    const totalTaxableDeductions = standardDeduction + 
+      hraExemption + 
+      total80C + 
+      total80D + 
+      actualNpsEmployee + 
+      actualNpsEmployer + 
+      actualHomeLoanInterest + 
+      professionalTax;
+
+    const taxableIncome = Math.max(0, grossSalary - totalTaxableDeductions);
+
+    // Old Slabs
+    let baseTax = 0;
+    if (taxableIncome > 500000) {
+      if (taxableIncome <= 250000) baseTax = 0;
+      else if (taxableIncome <= 500000) baseTax = (taxableIncome - 250000) * 0.05;
+      else if (taxableIncome <= 1000000) baseTax = 12500 + (taxableIncome - 500000) * 0.20;
+      else baseTax = 112500 + (taxableIncome - 1000000) * 0.30;
+    } // Rebate makes it 0 if taxableIncome <= 5,00,000
+
+    const rebate87A = taxableIncome <= 500000 ? baseTax : 0;
+    const taxAfterRebate = baseTax - rebate87A;
+    const cess = taxAfterRebate * 0.04;
+    const totalTax = taxAfterRebate + cess;
+
+    const deductionsFromGross = employeePf + professionalTax + actualNpsEmployee + actualNpsEmployer + otherDeductions + totalTax;
+    const netAnnualSalary = Math.max(0, grossSalary - deductionsFromGross);
+    const netMonthlySalary = netAnnualSalary / 12;
+
+    return {
+      grossSalary,
+      standardDeduction,
+      pfEmployerDeduction: actualNpsEmployer, // NPS Employer fits here as deduction
+      pfEmployeeDeduction: employeePf,
+      npsEmployeeDeduction: actualNpsEmployee,
+      npsEmployerDeduction: actualNpsEmployer,
+      hraExemption,
+      otherExemptions: total80C + total80D + actualHomeLoanInterest,
+      totalTaxableDeductions,
+      taxableIncome,
+      baseTax,
+      cess,
+      totalTax,
+      netAnnualSalary,
+      netMonthlySalary,
+    };
+  })();
+
+  // 4. New Regime Taxable deductions & calculations (FY 2025-26)
+  const newRegime = (() => {
+    const standardDeduction = 75000;
+    
+    // New regime only allows Standard Deduction (75k) and NPS Employer (80CCD(2))
+    const totalTaxableDeductions = standardDeduction + actualNpsEmployer;
+    const taxableIncome = Math.max(0, grossSalary - totalTaxableDeductions);
+
+    // New Slabs (FY 2025-26)
+    // Up to 4L: 0%
+    // 4L to 8L: 5%
+    // 8L to 12L: 10%
+    // 12L to 16L: 15%
+    // 16L to 20L: 20%
+    // Above 20L: 30%
+    let baseTax = 0;
+    if (taxableIncome > 700000) { // Rebate makes it 0 if taxableIncome <= 7L (effectively FY 25-26 threshold)
+      let tempTaxable = taxableIncome;
+      
+      if (tempTaxable > 2000000) {
+        baseTax += (tempTaxable - 2000000) * 0.30;
+        tempTaxable = 2000000;
+      }
+      if (tempTaxable > 1600000) {
+        baseTax += (tempTaxable - 1600000) * 0.20;
+        tempTaxable = 1600000;
+      }
+      if (tempTaxable > 1200000) {
+        baseTax += (tempTaxable - 1200000) * 0.15;
+        tempTaxable = 1200000;
+      }
+      if (tempTaxable > 800000) {
+        baseTax += (tempTaxable - 800000) * 0.10;
+        tempTaxable = 800000;
+      }
+      if (tempTaxable > 400000) {
+        baseTax += (tempTaxable - 400000) * 0.05;
+      }
+    }
+
+    const cess = baseTax * 0.04;
+    const totalTax = baseTax + cess;
+
+    const deductionsFromGross = employeePf + professionalTax + npsEmployee + actualNpsEmployer + otherDeductions + totalTax;
+    const netAnnualSalary = Math.max(0, grossSalary - deductionsFromGross);
+    const netMonthlySalary = netAnnualSalary / 12;
+
+    return {
+      grossSalary,
+      standardDeduction,
+      pfEmployerDeduction: actualNpsEmployer,
+      pfEmployeeDeduction: employeePf,
+      npsEmployeeDeduction: npsEmployee,
+      npsEmployerDeduction: actualNpsEmployer,
+      hraExemption: 0,
+      otherExemptions: 0,
+      totalTaxableDeductions,
+      taxableIncome,
+      baseTax,
+      cess,
+      totalTax,
+      netAnnualSalary,
+      netMonthlySalary,
+    };
+  })();
+
+  return {
+    basicSalary,
+    hraReceived,
+    employerPf,
+    employeePf,
+    specialAllowance,
+    gratuity,
+    grossSalary,
+    oldRegime,
+    newRegime,
+  };
+}

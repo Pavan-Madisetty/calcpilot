@@ -16,6 +16,9 @@ export default function sitemap(): MetadataRoute.Sitemap {
     '/calculators/cc-rewards',
     '/calculators/construction',
     '/calculators/tiles',
+    '/calculators/no-cost-emi',
+    '/calculators/in-hand-salary',
+    '/calculators/hra',
   ];
 
   return routes.map((route) => ({
