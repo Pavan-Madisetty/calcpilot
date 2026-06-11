@@ -55,8 +55,8 @@ export default function PublicLayout({
           
           {/* Logo Brand with icon */}
           <Link href="/" className="flex items-center gap-2.5 cursor-pointer group">
-            <img src="/logo.png" alt="ZeroEMI Logo" className="h-8 w-8 rounded-xl object-contain shadow-sm border border-slate-100/80 transition-transform duration-300 group-hover:scale-105" />
-            <span className="font-black text-xl font-display bg-gradient-to-r from-indigo-600 to-violet-600 bg-clip-text text-transparent tracking-tight">
+            <img src="/logo.png" alt="ZeroEMI Logo" className="h-10 w-10 rounded-xl object-contain shadow-sm border border-slate-100/80 transition-transform duration-300 group-hover:scale-105" />
+            <span className="font-black text-2xl font-display bg-gradient-to-r from-indigo-600 to-violet-600 bg-clip-text text-transparent tracking-tight">
               ZeroEMI
             </span>
           </Link>
