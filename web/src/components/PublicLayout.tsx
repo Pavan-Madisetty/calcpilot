@@ -47,8 +47,9 @@ export default function PublicLayout({
       <header className="sticky top-0 z-40 bg-white border-b border-slate-200 shadow-sm h-16 shrink-0">
         <div className="max-w-5xl mx-auto px-4 md:px-6 h-full flex items-center justify-between gap-4">
           
-          {/* Logo Brand without icon */}
-          <Link href="/" className="flex items-center cursor-pointer">
+          {/* Logo Brand with icon */}
+          <Link href="/" className="flex items-center gap-2.5 cursor-pointer">
+            <img src="/logo.png" alt="ZeroEMI Logo" className="h-8 w-8 rounded-xl object-contain shadow-sm border border-slate-100" />
             <span className="font-extrabold text-xl font-display text-indigo-600 tracking-tight">
               ZeroEMI
             </span>
