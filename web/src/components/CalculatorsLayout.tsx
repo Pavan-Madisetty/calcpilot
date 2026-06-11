@@ -58,7 +58,7 @@ export default function CalculatorsLayout({ children }: CalculatorsLayoutProps) 
   return (
     <div className="grid grid-cols-1 lg:grid-cols-12 gap-6 items-start">
       {/* Sidebar list of calculators on desktop */}
-      <div className="lg:col-span-3 glass-card p-5 shadow-sm space-y-5 lg:order-first order-last">
+      <div className="lg:col-span-3 lg:sticky lg:top-20 glass-card p-5 shadow-sm space-y-5 lg:order-first order-last">
         {categories.map((cat) => (
           <div key={cat.name} className="space-y-1.5">
             <span className="text-[10px] uppercase font-black text-slate-400 tracking-wider px-3 mb-2 block">
