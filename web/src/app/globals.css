@@ -22,7 +22,7 @@
 }
 
 :root {
-  --background: #fcfcfd; /* Ultra clean off-white */
+  --background: #f8fafc; /* Warm, premium slate-50 background */
   --foreground: #0f172a; /* Slate 900 */
   
   --card: #ffffff;
@@ -44,7 +44,7 @@
   --input: #ffffff;
   --ring: #4f46e5;
   
-  --radius: 0.75rem;
+  --radius: 1rem;
   
   --chart-1: #4f46e5; /* Royal Indigo */
   --chart-2: #10b981; /* Forest Emerald */
@@ -56,17 +56,54 @@
 /* Base Body Styles */
 body {
   background-color: var(--background);
+  background-image: 
+    radial-gradient(at 0% 0%, rgba(244, 63, 94, 0.03) 0px, transparent 50%),
+    radial-gradient(at 50% 0%, rgba(79, 70, 229, 0.03) 0px, transparent 50%),
+    radial-gradient(at 100% 0%, rgba(16, 185, 129, 0.02) 0px, transparent 50%);
   color: var(--foreground);
   font-family: var(--font-sans);
   overflow-x: hidden;
+  letter-spacing: -0.01em;
 }
 
-/* Premium Card and shadow styling */
-.premium-card {
-  background: #ffffff;
-  border: 1px solid #e2e8f0;
-  box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.05), 0 2px 4px -2px rgba(0, 0, 0, 0.05);
-  border-radius: 1rem;
+/* Glassmorphism Card Style */
+.glass-card, 
+.bg-white.border.border-slate-200,
+.bg-white.border.border-slate-200.shadow-sm,
+.bg-white.border.border-slate-200.rounded-2xl.shadow-sm,
+.bg-white.border.border-slate-200.rounded-3xl.shadow-sm,
+[class*="bg-white"][class*="border-slate-200"][class*="rounded-"],
+section.bg-white.border.border-slate-200 {
+  background: rgba(255, 255, 255, 0.8) !important;
+  backdrop-filter: blur(20px) !important;
+  -webkit-backdrop-filter: blur(20px) !important;
+  border: 1px solid rgba(226, 232, 240, 0.7) !important;
+  box-shadow: 
+    0 10px 25px -5px rgba(15, 23, 42, 0.03), 
+    0 8px 16px -6px rgba(15, 23, 42, 0.02) !important;
+  border-radius: 1.5rem !important; /* Soften the corners globally */
+  transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1) !important;
+}
+
+/* Add hover effect to interactive cards globally */
+a.bg-white.border.border-slate-200:hover,
+a.bg-white.border.border-slate-200.shadow-sm:hover,
+a.bg-white.border.border-slate-200.rounded-2xl.shadow-sm:hover,
+a.bg-white.border.border-slate-200.rounded-3xl.shadow-sm:hover,
+a[class*="bg-white"][class*="border-slate-200"][class*="rounded-"]:hover {
+  border-color: rgba(79, 70, 229, 0.35) !important;
+  box-shadow: 
+    0 20px 35px -10px rgba(79, 70, 229, 0.08), 
+    0 4px 12px -2px rgba(15, 23, 42, 0.03) !important;
+  transform: translateY(-2px) !important;
+}
+
+/* Upgraded Header with solid-glass filter */
+header.sticky {
+  background: rgba(255, 255, 255, 0.8) !important;
+  backdrop-filter: blur(20px) !important;
+  -webkit-backdrop-filter: blur(20px) !important;
+  border-bottom: 1px solid rgba(226, 232, 240, 0.6) !important;
 }
 
 /* Custom scrollbars */
@@ -88,24 +125,65 @@ body {
   background: #94a3b8;
 }
 
-/* Input elements styling */
+/* Premium range input */
 input[type="range"] {
+  -webkit-appearance: none;
+  width: 100%;
   height: 6px;
   border-radius: 9999px;
   background: #e2e8f0;
-  accent-color: var(--primary);
+  outline: none;
 }
 
+input[type="range"]::-webkit-slider-thumb {
+  -webkit-appearance: none;
+  appearance: none;
+  width: 18px;
+  height: 18px;
+  border-radius: 50%;
+  background: #ffffff;
+  border: 2px solid var(--primary);
+  cursor: pointer;
+  box-shadow: 0 2px 4px rgba(79, 70, 229, 0.2), 0 0 0 4px rgba(79, 70, 229, 0.08);
+  transition: transform 0.1s ease, box-shadow 0.1s ease;
+}
+
+input[type="range"]::-webkit-slider-thumb:hover {
+  transform: scale(1.1);
+  box-shadow: 0 3px 6px rgba(79, 70, 229, 0.3), 0 0 0 6px rgba(79, 70, 229, 0.12);
+}
+
+input[type="range"]::-webkit-slider-thumb:active {
+  transform: scale(0.95);
+  box-shadow: 0 1px 2px rgba(79, 70, 229, 0.2), 0 0 0 8px rgba(79, 70, 229, 0.16);
+}
+
+/* General form fields */
 select, input[type="number"], input[type="text"] {
   border: 1px solid #cbd5e1;
   border-radius: 0.75rem;
   background-color: #ffffff;
   color: #0f172a;
-  transition: all 0.2s ease;
+  font-weight: 500;
+  transition: all 0.2s cubic-bezier(0.4, 0, 0.2, 1);
 }
 
 select:focus, input[type="number"]:focus, input[type="text"]:focus {
   border-color: var(--primary);
-  box-shadow: 0 0 0 2px rgba(79, 70, 229, 0.15);
+  box-shadow: 0 0 0 3px rgba(79, 70, 229, 0.12);
   outline: none;
+}
+
+/* Enhance print layout formatting */
+@media print {
+  body {
+    background: #ffffff !important;
+    color: #000000 !important;
+  }
+  .glass-card, 
+  .bg-white.border.border-slate-200.shadow-sm {
+    border: none !important;
+    background: transparent !important;
+    box-shadow: none !important;
+  }
 }

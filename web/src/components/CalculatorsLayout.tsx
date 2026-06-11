@@ -58,10 +58,10 @@ export default function CalculatorsLayout({ children }: CalculatorsLayoutProps) 
   return (
     <div className="grid grid-cols-1 lg:grid-cols-12 gap-6 items-start">
       {/* Sidebar list of calculators on desktop */}
-      <div className="lg:col-span-3 bg-white border border-slate-200 p-4 rounded-2xl shadow-sm space-y-4">
+      <div className="lg:col-span-3 glass-card p-5 shadow-sm space-y-5">
         {categories.map((cat) => (
-          <div key={cat.name} className="space-y-1">
-            <span className="text-[10px] uppercase font-extrabold text-slate-400 tracking-wider px-3 mb-1.5 block">
+          <div key={cat.name} className="space-y-1.5">
+            <span className="text-[10px] uppercase font-black text-slate-400 tracking-wider px-3 mb-2 block">
               {cat.name}
             </span>
             {cat.items.map((c) => {
@@ -71,10 +71,10 @@ export default function CalculatorsLayout({ children }: CalculatorsLayoutProps) 
                 <Link
                   key={c.id}
                   href={c.href}
-                  className={`flex items-center w-full px-3 py-2 rounded-xl text-left text-xs font-semibold transition cursor-pointer ${
+                  className={`flex items-center w-full px-3 py-2.5 rounded-xl text-left text-xs font-bold transition-all duration-200 cursor-pointer ${
                     active
-                      ? 'bg-indigo-50 text-indigo-600 font-bold'
-                      : 'text-slate-600 hover:bg-slate-50'
+                      ? 'bg-indigo-50/70 border-l-2 border-indigo-600 pl-3.5 text-indigo-600 shadow-[inset_0_1px_1px_rgba(79,70,229,0.02)]'
+                      : 'text-slate-600 hover:bg-slate-100/60 hover:text-indigo-600 hover:pl-3.5'
                   }`}
                 >
                   <Icon size={14} className="mr-2.5 shrink-0" />

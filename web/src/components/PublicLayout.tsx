@@ -44,13 +44,13 @@ export default function PublicLayout({
   return (
     <div className="min-h-screen flex flex-col bg-slate-50/50">
       {/* 1. PREMIUM TOP NAVIGATION BAR */}
-      <header className="sticky top-0 z-40 bg-white border-b border-slate-200 shadow-sm h-16 shrink-0">
+      <header className="sticky top-0 z-40 bg-white/85 backdrop-blur-md border-b border-slate-200/60 shadow-sm h-16 shrink-0">
         <div className="max-w-5xl mx-auto px-4 md:px-6 h-full flex items-center justify-between gap-4">
           
           {/* Logo Brand with icon */}
-          <Link href="/" className="flex items-center gap-2.5 cursor-pointer">
-            <img src="/logo.png" alt="ZeroEMI Logo" className="h-8 w-8 rounded-xl object-contain shadow-sm border border-slate-100" />
-            <span className="font-extrabold text-xl font-display text-indigo-600 tracking-tight">
+          <Link href="/" className="flex items-center gap-2.5 cursor-pointer group">
+            <img src="/logo.png" alt="ZeroEMI Logo" className="h-8 w-8 rounded-xl object-contain shadow-sm border border-slate-100/80 transition-transform duration-300 group-hover:scale-105" />
+            <span className="font-black text-xl font-display bg-gradient-to-r from-indigo-600 to-violet-600 bg-clip-text text-transparent tracking-tight">
               ZeroEMI
             </span>
           </Link>
