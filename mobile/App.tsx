@@ -619,7 +619,7 @@ export default function App() {
                       </View>
                       <View style={styles.resultRow}>
                         <Text style={styles.resultLabel}>Est. Wealth Gain</Text>
-                        <Text style={[styles.resultValue, { color: '#10b981' }]}>{formatCurrency(sipResult.wealth)}</Text>
+                        <Text style={[styles.resultValue, { color: '#34d399' }]}>{formatCurrency(sipResult.wealth)}</Text>
                       </View>
                     </View>
                   </View>
@@ -710,7 +710,7 @@ export default function App() {
                       </View>
                       <View style={styles.resultRow}>
                         <Text style={styles.resultLabel}>Net Regime Savings</Text>
-                        <Text style={[styles.resultValue, { color: '#10b981', fontWeight: '800' }]}>
+                        <Text style={[styles.resultValue, { color: '#34d399', fontWeight: '800' }]}>
                           {formatCurrency(Math.max(0, taxResult.oldTax - taxResult.newTax))}
                         </Text>
                       </View>
@@ -906,7 +906,7 @@ export default function App() {
                       </View>
                       <View style={styles.resultRow}>
                         <Text style={styles.resultLabel}>Hidden Charges</Text>
-                        <Text style={[styles.resultValue, { color: '#f43f5e' }]}>{formatCurrency(ncResult.hiddenCharges)}</Text>
+                        <Text style={[styles.resultValue, { color: '#fb7185' }]}>{formatCurrency(ncResult.hiddenCharges)}</Text>
                       </View>
                       <View style={styles.resultRow}>
                         <Text style={styles.resultLabel}>Total Amount Paid</Text>
@@ -970,7 +970,7 @@ export default function App() {
                       </View>
                       <View style={styles.resultRow}>
                         <Text style={styles.resultLabel}>Taxable HRA Portion</Text>
-                        <Text style={[styles.resultValue, { color: '#f43f5e' }]}>{formatCurrency(hraResult.taxable)}</Text>
+                        <Text style={[styles.resultValue, { color: '#fb7185' }]}>{formatCurrency(hraResult.taxable)}</Text>
                       </View>
                     </View>
                   </View>
@@ -1052,7 +1052,7 @@ export default function App() {
                       </View>
                       <View style={styles.resultRow}>
                         <Text style={styles.resultLabel}>Recommended Option</Text>
-                        <Text style={[styles.resultValue, { color: '#10b981', fontWeight: 'bold' }]}>
+                        <Text style={[styles.resultValue, { color: '#34d399', fontWeight: 'bold' }]}>
                           {salResult.newTakeHome >= salResult.oldTakeHome ? 'New Tax Regime' : 'Old Tax Regime'}
                         </Text>
                       </View>
@@ -1367,11 +1367,11 @@ const styles = StyleSheet.create({
   },
   resultsContainer: {
     marginTop: 12,
-    backgroundColor: '#f5f3ff',
+    backgroundColor: '#1e1b4b',
     borderRadius: 20,
     padding: 20,
     borderWidth: 1,
-    borderColor: '#e0e7ff',
+    borderColor: '#312e81',
   },
   resultRow: {
     flexDirection: 'row',
@@ -1379,24 +1379,24 @@ const styles = StyleSheet.create({
     alignItems: 'center',
     paddingVertical: 10,
     borderBottomWidth: 1,
-    borderBottomColor: '#e0e7ff',
+    borderBottomColor: 'rgba(99, 102, 241, 0.15)',
   },
   resultLabel: {
     fontSize: 11,
     fontWeight: '800',
-    color: '#6366f1',
+    color: '#a5b4fc',
     textTransform: 'uppercase',
     letterSpacing: 0.5,
   },
   resultValue: {
     fontSize: 14,
     fontWeight: '800',
-    color: '#1e293b',
+    color: '#ffffff',
   },
   resultValueHighlight: {
     fontSize: 18,
     fontWeight: '900',
-    color: '#4f46e5',
+    color: '#38bdf8',
   },
   tabBar: {
     flexDirection: 'row',
